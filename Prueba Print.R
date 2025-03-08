@@ -131,3 +131,98 @@ LIMIT 5;
 RE_Mejores_2013 <- dbGetQuery(conexion, Mejores_en_2013)
 
 #### DE ESTA FORMA OBTENEMOS EN TABLAS LOS 5 MEJORES CORREDORES DURANTE 2013 - 2017 ###
+
+
+#### MEJORES ESCUDERIAS EN BASE SUS PUNTOS Y VICTORIAS DURANTE 2017 - 2013 ####
+
+### Mejores escuderias en 2017 ##
+
+mejores_escuderias_2017 <- "SELECT
+a.constructorId,
+a.name,
+c.year,
+SUM(b.points) AS TotalPuntos,
+sum(b.wins) AS TotalVictorias
+FROM constructors a
+INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
+INNER JOIN races c ON c.raceId = b.raceId
+WHERE c.year = 2017
+GROUP BY a.constructorId
+ORDER BY TotalPuntos DESC
+LIMIT 5;"
+
+REmejores_escuderias2017 <- dbGetQuery(conexion, mejores_escuderias_2017)
+
+## Mejores escuderias en 2016 ##
+
+mejores_escuderias_2016 <- "SELECT
+a.constructorId,
+a.name,
+c.year,
+SUM(b.points) AS TotalPuntos,
+sum(b.wins) AS TotalVictorias
+FROM constructors a
+INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
+INNER JOIN races c ON c.raceId = b.raceId
+WHERE c.year = 2016
+GROUP BY a.constructorId
+ORDER BY TotalPuntos DESC
+LIMIT 5;"
+
+REmejores_escuderias2016 <- dbGetQuery(conexion, mejores_escuderias_2016)
+
+## Mejores escuderias en 2015 ##
+
+mejores_escuderias_2015 <- "SELECT
+a.constructorId,
+a.name,
+c.year,
+SUM(b.points) AS TotalPuntos,
+sum(b.wins) AS TotalVictorias
+FROM constructors a
+INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
+INNER JOIN races c ON c.raceId = b.raceId
+WHERE c.year = 2015
+GROUP BY a.constructorId
+ORDER BY TotalPuntos DESC
+LIMIT 5;"
+
+REmejores_escuderias2015 <- dbGetQuery(conexion, mejores_escuderias_2015)
+
+## Mejores escuderias en 2014 ##
+
+mejores_escuderias_2014 <- "SELECT
+a.constructorId,
+a.name,
+c.year,
+SUM(b.points) AS TotalPuntos,
+sum(b.wins) AS TotalVictorias
+FROM constructors a
+INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
+INNER JOIN races c ON c.raceId = b.raceId
+WHERE c.year = 2014
+GROUP BY a.constructorId
+ORDER BY TotalPuntos DESC
+LIMIT 5;"
+
+REmejores_escuderias2014 <- dbGetQuery(conexion, mejores_escuderias_2014)
+
+## Mejores escuderias en 2013 ##
+
+mejores_escuderias_2013 <- "SELECT
+a.constructorId,
+a.name,
+c.year,
+SUM(b.points) AS TotalPuntos,
+sum(b.wins) AS TotalVictorias
+FROM constructors a
+INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
+INNER JOIN races c ON c.raceId = b.raceId
+WHERE c.year = 2013
+GROUP BY a.constructorId
+ORDER BY TotalPuntos DESC
+LIMIT 5;"
+
+REmejores_escuderias2013 <- dbGetQuery(conexion, mejores_escuderias_2013)
+
+## DE ESTA FORMA OBTENEMOS LAS 5 MEJORES ESCUDERIAS DURANTE 2017 - 2013 ##
