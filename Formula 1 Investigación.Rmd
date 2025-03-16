@@ -1,0 +1,12 @@
+---
+title: "Formula 1 Investigación"
+author: "Abrahám Soto, Sonia Romero, Mariangel Arguello, Eduardo Longart & Daniel Aristigueta"
+date: "2025-03-12"
+output: html_document
+lang: es-ES
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
