@@ -310,3 +310,49 @@ LIMIT 5;"
 
 circuitos_con_mascarreras <- dbGetQuery(con, circuitos_carreras_5) #de esta forma obtenemos los 5 circuitos con más carreras
 ```
+
+
+```{r}
+## NUMERO DE VECES EN QUE CADA PILOTO HA TERMINADO ENTRE LOS TRES PRIMEROS ENTRE EL 2013 Y 2017 ##
+
+Mejores_pilotos <- "SELECT
+  d.forename,
+  d.surname,
+  r.position,
+  COUNT (*) AS total_podios
+FROM
+ drivers d 
+INNER JOIN 
+ results r ON d.driverId = r.driverId
+INNER JOIN races s ON s.raceId = r.raceId
+WHERE 
+ r.position BETWEEN 1 and 3 AND s.year = 2013 AND 2017
+GROUP BY 
+  d.forename, 
+  d.surname,
+  r.position
+ORDER BY
+ total_podios DESC;"
+
+Mejores_pilotos_2013_2017 <- dbGetQuery(con, Mejores_pilotos) 
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
