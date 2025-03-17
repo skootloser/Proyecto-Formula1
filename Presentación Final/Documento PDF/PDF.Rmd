@@ -34,7 +34,7 @@ print(tablas)
 
 # Query y creación de data frame
 
-DfFormula1 <- dbReadTable(con, tablas) 
+DfFormula1 <- dbReadTable(con, tablas[1]) 
 
 corredores <-"SELECT * FROM drivers" 
 dfcorredores <- dbGetQuery(con ,corredores) 
@@ -43,7 +43,7 @@ circuitos <-"SELECT * FROM circuits"
 
 DfCircutitos <- dbGetQuery(con, circuitos)
 
-DfCircuitos <- dbReadTable(con, circuitos)
+DfCircuitos <- dbReadTable(con, "circuits")
 
 #Salida de archivo excel para toda la base de datos
 
