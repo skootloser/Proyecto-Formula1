@@ -338,7 +338,49 @@ Mejores_pilotos_2013_2017 <- dbGetQuery(con, Mejores_pilotos)
 
 ```
 
+```{r}
+## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2017 ##
 
+Retiro_Fallas_Parada_boxes_2017 <- "SELECT r.year AS Año,
+       r.name AS carrera,
+       d.forename || ' ' || d.surname AS Piloto,
+	   SUM(e.points) AS Total_Puntos,
+	   SUM(e.wins) AS Total_Victoias,
+       COUNT(DISTINCT CASE WHEN s.status like '%Mechanical%' OR '%Electrical%' OR '%Engine misfire%' OR '%Engine fire%'  THEN res.resultId END) AS retiros_por_fallas_mecanicas,
+       COUNT(DISTINCT ps.stop) AS paradas_en_boxes
+FROM drivers d INNER JOIN results res ON d.driverId = res.driverId
+INNER JOIN driver_standings e ON d.driverId = e.driverId
+INNER JOIN races r ON res.raceId = r.raceId
+LEFT JOIN status s ON res.statusId = s.statusId
+LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
+WHERE r.year == 2017
+GROUP BY d.driverId, r.raceId
+ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas AND Total_Puntos DESC;"
+
+Retiro_Fallas_Parada_boxes_2017 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2017)
+```
+
+```{r}
+## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2016##
+
+Retiro_Fallas_Parada_boxes_2016 <- "SELECT r.year AS Año,
+       r.name AS carrera,
+       d.forename || ' ' || d.surname AS Piloto,
+	   SUM(e.points) AS Total_Puntos,
+	   SUM(e.wins) AS Total_Victoias,
+       COUNT(DISTINCT CASE WHEN s.status like '%Mechanical%' OR '%Electrical%' OR '%Engine misfire%' OR '%Engine fire%'  THEN res.resultId END) AS retiros_por_fallas_mecanicas,
+       COUNT(DISTINCT ps.stop) AS paradas_en_boxes
+FROM drivers d INNER JOIN results res ON d.driverId = res.driverId
+INNER JOIN driver_standings e ON d.driverId = e.driverId
+INNER JOIN races r ON res.raceId = r.raceId
+LEFT JOIN status s ON res.statusId = s.statusId
+LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
+WHERE r.year == 2016
+GROUP BY d.driverId, r.raceId
+ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas AND Total_Puntos DESC;"
+
+Retiro_Fallas_Parada_boxes_2016 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2016)
+```
 
 
 
