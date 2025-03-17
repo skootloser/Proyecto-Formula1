@@ -315,26 +315,155 @@ circuitos_con_mascarreras <- dbGetQuery(con, circuitos_carreras_5) #de esta form
 ```{r}
 ## NUMERO DE VECES EN QUE CADA PILOTO HA TERMINADO ENTRE LOS TRES PRIMEROS ENTRE EL 2013 Y 2017 ##
 
-Mejores_pilotos <- "SELECT
-  d.forename,
-  d.surname,
-  r.position,
-  COUNT (*) AS total_podios
-FROM
- drivers d 
-INNER JOIN 
- results r ON d.driverId = r.driverId
-INNER JOIN races s ON s.raceId = r.raceId
-WHERE 
- r.position BETWEEN 1 and 3 AND s.year = 2013 AND 2017
-GROUP BY 
-  d.forename, 
-  d.surname,
-  r.position
-ORDER BY
- total_podios DESC;"
+## 2013 ##
 
-Mejores_pilotos_2013_2017 <- dbGetQuery(con, Mejores_pilotos) 
+Podios_2013 <- "SELECT d.driverId AS ID_Pilotos,
+d.forename AS Nombre,
+       d.surname AS Apellido,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       drivers d ON d.driverId = r.driverId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2013
+GROUP BY
+       d.driverId, 
+	   d.forename, d.surname
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_2013 <- dbGetQuery(con, Podios_2013) 
+```
+
+
+```{r}
+## 2014 ##
+
+Podios_2014 <- "SELECT d.driverId AS ID_Pilotos,
+       d.forename AS Nombre,
+       d.surname AS Apellido,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       drivers d ON d.driverId = r.driverId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2014
+GROUP BY
+       d.driverId, 
+	   d.forename, d.surname
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_2014 <- dbGetQuery(con, Podios_2014) 
+
+```
+
+
+
+```{r}
+## 2015 ## 
+
+Podios_2015 <- "SELECT d.driverId AS ID_Pilotos,
+       d.forename AS Nombre,
+       d.surname AS Apellido,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       drivers d ON d.driverId = r.driverId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2015
+GROUP BY
+       d.driverId, 
+	   d.forename, d.surname
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_2015 <- dbGetQuery(con, Podios_2015) 
+
+```
+
+
+```{r}
+## 2016 ## 
+
+Podios_2016 <- "SELECT d.driverId AS ID_Pilotos,
+       d.forename AS Nombre,
+       d.surname AS Apellido,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       drivers d ON d.driverId = r.driverId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2016
+GROUP BY
+       d.driverId, 
+	   d.forename, d.surname
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_2016 <- dbGetQuery(con, Podios_2016) 
+
+```
+
+```{r}
+## 2017 ##
+
+Podios_2017 <- "SELECT d.driverId AS ID_Pilotos,
+       d.forename AS Nombre,
+       d.surname AS Apellido,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       drivers d ON d.driverId = r.driverId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2017
+GROUP BY
+       d.driverId, 
+	   d.forename, d.surname
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_2017 <- dbGetQuery(con, Podios_2017) 
 
 ```
 
@@ -404,7 +533,6 @@ ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas AND Total_Puntos DESC
 
 Retiro_Fallas_Parada_boxes_2015 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2015)
 ```
-
 
 
 
