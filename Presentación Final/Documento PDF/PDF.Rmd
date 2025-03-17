@@ -1,26 +1,48 @@
+---
+title: "La Fórmula 1"
+subtitle: "Proyecto Final"
+output: pdf_document
+date: "Marzo de 2025"
+fontsize: 12pt
+lang: es-Mx
+toc: TRUE
+---
+
+```{r setup, include=FALSE}
+
 #inserción de data frame en Rstudio
+
+library(tidyverse)
+library(stringr)
+library(stringi)
+library(readr)
+library(gt) 
+library(dplyr)
+library(knitr)
+library(tinytex) 
 library(readxl)
 library(dplyr)
+library(RSQLite)
+library(DBI)
+library(writexl)
 
 # Conexión con data SQLite
 
-library(RSQLite)
-library(DBI)
-con <- dbConnect(RSQLite::SQLite(), dbname = "Formula1.sqlite" )
+con <- dbConnect(RSQLite::SQLite(), dbname = "Formula1.sqlite")
 tablas <- dbListTables(con)
 print(tablas)
-#Salida para archivo excel
-install.packages("writexl")
-library(writexl)
 
-# Query y creacion de data frame
-DfFormula1 <- dbReadTable(con, tablas)
+# Query y creación de data frame
+
+DfFormula1 <- dbReadTable(con, tablas) 
 
 corredores <-"SELECT * FROM drivers" 
 dfcorredores <- dbGetQuery(con ,corredores) 
 
 circuitos <-"SELECT * FROM circuits" 
+
 DfCircutitos <- dbGetQuery(con, circuitos)
+
 DfCircuitos <- dbReadTable(con, circuitos)
 
 #Salida de archivo excel para toda la base de datos
@@ -35,6 +57,9 @@ write_xlsx(lista_de_datos, "Formula1.xlsx")
 # Cerrar la conexión a la base de datos
 dbDisconnect(con)
 
+```
+
+```{r}
 # Observar los mejores corredores del año 2017 en base a la suma de sus puntos y victorias
 
 Mejores_en_2017 <- "
@@ -55,9 +80,10 @@ GROUP BY a.driverId
 ORDER BY TotalPuntos DESC
 LIMIT 5;
 "
-
 RE_Mejores_2017 <- dbGetQuery(con, Mejores_en_2017)
+```
 
+```{r}
 # Observar los mejores corredores del año 2016 en base a la suma de sus puntos y victorias
 
 Mejores_en_2016 <- "
@@ -78,9 +104,11 @@ GROUP BY a.driverId
 ORDER BY TotalPuntos DESC
 LIMIT 5;
 "
-
 RE_Mejores_2016 <- dbGetQuery(con, Mejores_en_2016)
 
+```
+
+```{r}
 # Observar los mejores corredores del año 2015 en base a la suma de sus puntos y victorias
 
 Mejores_en_2015 <- "
@@ -103,6 +131,9 @@ LIMIT 5;
 "
 
 RE_Mejores_2015 <- dbGetQuery(con, Mejores_en_2015)
+```
+
+```{r}
 
 # Observar los mejores corredores del año 2014 en base a la suma de sus puntos y victorias
 
@@ -151,7 +182,9 @@ LIMIT 5;
 RE_Mejores_2013 <- dbGetQuery(con, Mejores_en_2013)
 
 #### DE ESTA FORMA OBTENEMOS EN TABLAS LOS 5 MEJORES CORREDORES DURANTE 2013 - 2017 ###
+```
 
+```{r}
 
 #### MEJORES ESCUDERIAS EN BASE SUS PUNTOS Y VICTORIAS DURANTE 2017 - 2013 ####
 
@@ -173,6 +206,9 @@ LIMIT 5;"
 
 REmejores_escuderias2017 <- dbGetQuery(con, mejores_escuderias_2017)
 
+```
+
+```{r}
 ## Mejores escuderias en 2016 ##
 
 mejores_escuderias_2016 <- "SELECT
@@ -191,6 +227,10 @@ LIMIT 5;"
 
 REmejores_escuderias2016 <- dbGetQuery(con, mejores_escuderias_2016)
 
+```
+
+```{r}
+
 ## Mejores escuderias en 2015 ##
 
 mejores_escuderias_2015 <- "SELECT
@@ -208,7 +248,9 @@ ORDER BY TotalPuntos DESC
 LIMIT 5;"
 
 REmejores_escuderias2015 <- dbGetQuery(con, mejores_escuderias_2015)
+```
 
+```{r}
 ## Mejores escuderias en 2014 ##
 
 mejores_escuderias_2014 <- "SELECT
@@ -227,6 +269,9 @@ LIMIT 5;"
 
 REmejores_escuderias2014 <- dbGetQuery(con, mejores_escuderias_2014)
 
+```
+
+```{r}
 ## Mejores escuderias en 2013 ##
 
 mejores_escuderias_2013 <- "SELECT
@@ -246,7 +291,9 @@ LIMIT 5;"
 REmejores_escuderias2013 <- dbGetQuery(con, mejores_escuderias_2013)
 
 ## DE ESTA FORMA OBTENEMOS LAS 5 MEJORES ESCUDERIAS DURANTE 2017 - 2013 ##
+```
 
+```{r}
 ## Los 5 circuitos con mas carreras ##
 
 circuitos_carreras_5 <- "SELECT 
@@ -261,5 +308,5 @@ GROUP BY a.circuitId
 ORDER BY TotalCarreras DESC
 LIMIT 5;"
 
-circuitos_con_mascarreras <- dbGetQuery(con, circuitos_carreras_5) #de esta forma obtenemos los 5 circuitps con mas carreras
-
+circuitos_con_mascarreras <- dbGetQuery(con, circuitos_carreras_5) #de esta forma obtenemos los 5 circuitos con más carreras
+```
