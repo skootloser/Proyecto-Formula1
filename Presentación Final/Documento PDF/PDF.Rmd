@@ -10,7 +10,7 @@ toc: TRUE
 
 ```{r setup, include=FALSE}
 
-#inserción de data frame en Rstudio
+#inserción de data frame en Rstudio y llamado de librerias
 
 library(tidyverse)
 library(stringr)
@@ -59,16 +59,17 @@ dbDisconnect(con)
 
 ```
 
+
 ```{r}
 # Observar los mejores corredores del año 2017 en base a la suma de sus puntos y victorias
 
 Mejores_en_2017 <- "
 SELECT
-    a.driverRef,
-    a.forename,
-    a.surname,
-    a.number,
-    d.year,
+    a.driverRef AS Referencia,
+    a.forename AS Nombre,
+    a.surname Apellido,
+    a.number AS Número,
+    d.year AS Año,
     SUM(b.points) AS TotalPuntos,
     sum(b.wins) AS TotalVictorias
 FROM drivers a
@@ -80,7 +81,7 @@ GROUP BY a.driverId
 ORDER BY TotalPuntos DESC
 LIMIT 5;
 "
-RE_Mejores_2017 <- dbGetQuery(con, Mejores_en_2017)
+Mejores_2017 <- dbGetQuery(con, Mejores_en_2017)
 ```
 
 ```{r}
@@ -88,11 +89,11 @@ RE_Mejores_2017 <- dbGetQuery(con, Mejores_en_2017)
 
 Mejores_en_2016 <- "
 SELECT
-    a.driverRef,
-    a.forename,
-    a.surname,
-    a.number,
-    d.year,
+    a.driverRef AS Referencia,
+    a.forename AS Nombre,
+    a.surname Apellido,
+    a.number AS Número,
+    d.year AS Año,
     SUM(b.points) AS TotalPuntos,
     sum(b.wins) AS TotalVictorias
 FROM drivers a
@@ -104,7 +105,7 @@ GROUP BY a.driverId
 ORDER BY TotalPuntos DESC
 LIMIT 5;
 "
-RE_Mejores_2016 <- dbGetQuery(con, Mejores_en_2016)
+Mejores_2016 <- dbGetQuery(con, Mejores_en_2016)
 
 ```
 
@@ -113,11 +114,11 @@ RE_Mejores_2016 <- dbGetQuery(con, Mejores_en_2016)
 
 Mejores_en_2015 <- "
 SELECT
-    a.driverRef,
-    a.forename,
-    a.surname,
-    a.number,
-    d.year,
+    a.driverRef AS Referencia,
+    a.forename AS Nombre,
+    a.surname Apellido,
+    a.number AS Número,
+    d.year AS Año,
     SUM(b.points) AS TotalPuntos,
     sum(b.wins) AS TotalVictorias
 FROM drivers a
@@ -130,20 +131,19 @@ ORDER BY TotalPuntos DESC
 LIMIT 5;
 "
 
-RE_Mejores_2015 <- dbGetQuery(con, Mejores_en_2015)
+Mejores_2015 <- dbGetQuery(con, Mejores_en_2015)
 ```
 
 ```{r}
-
 # Observar los mejores corredores del año 2014 en base a la suma de sus puntos y victorias
 
 Mejores_en_2014 <- "
 SELECT
-    a.driverRef,
-    a.forename,
-    a.surname,
-    a.number,
-    d.year,
+    a.driverRef AS Referencia,
+    a.forename AS Nombre,
+    a.surname Apellido,
+    a.number AS Número,
+    d.year AS Año,
     SUM(b.points) AS TotalPuntos,
     sum(b.wins) AS TotalVictorias
 FROM drivers a
@@ -156,17 +156,20 @@ ORDER BY TotalPuntos DESC
 LIMIT 5;
 "
 
-RE_Mejores_2014 <- dbGetQuery(con, Mejores_en_2014)
+Mejores_2014 <- dbGetQuery(con, Mejores_en_2014)
+```
 
+
+```{r}
 # Observar los mejores corredores del año 2013 en base a la suma de sus puntos y victorias
 
 Mejores_en_2013 <- "
 SELECT
-    a.driverRef,
-    a.forename,
-    a.surname,
-    a.number,
-    d.year,
+    a.driverRef AS Referencia,
+    a.forename AS Nombre,
+    a.surname Apellido,
+    a.number AS Número,
+    d.year AS Año,
     SUM(b.points) AS TotalPuntos,
     sum(b.wins) AS TotalVictorias
 FROM drivers a
@@ -179,7 +182,7 @@ ORDER BY TotalPuntos DESC
 LIMIT 5;
 "
 
-RE_Mejores_2013 <- dbGetQuery(con, Mejores_en_2013)
+Mejores_2013 <- dbGetQuery(con, Mejores_en_2013)
 
 #### DE ESTA FORMA OBTENEMOS EN TABLAS LOS 5 MEJORES CORREDORES DURANTE 2013 - 2017 ###
 ```
@@ -191,9 +194,9 @@ RE_Mejores_2013 <- dbGetQuery(con, Mejores_en_2013)
 ### Mejores escuderias en 2017 ##
 
 mejores_escuderias_2017 <- "SELECT
-a.constructorId,
-a.name,
-c.year,
+a.constructorId AS ID,
+a.name AS Escuderia,
+c.year AS Año,
 SUM(b.points) AS TotalPuntos,
 sum(b.wins) AS TotalVictorias
 FROM constructors a
@@ -204,7 +207,7 @@ GROUP BY a.constructorId
 ORDER BY TotalPuntos DESC
 LIMIT 5;"
 
-REmejores_escuderias2017 <- dbGetQuery(con, mejores_escuderias_2017)
+Escuderias_2017 <- dbGetQuery(con, mejores_escuderias_2017)
 
 ```
 
@@ -212,9 +215,9 @@ REmejores_escuderias2017 <- dbGetQuery(con, mejores_escuderias_2017)
 ## Mejores escuderias en 2016 ##
 
 mejores_escuderias_2016 <- "SELECT
-a.constructorId,
-a.name,
-c.year,
+a.constructorId AS ID,
+a.name AS Escuderia,
+c.year AS Año,
 SUM(b.points) AS TotalPuntos,
 sum(b.wins) AS TotalVictorias
 FROM constructors a
@@ -225,7 +228,7 @@ GROUP BY a.constructorId
 ORDER BY TotalPuntos DESC
 LIMIT 5;"
 
-REmejores_escuderias2016 <- dbGetQuery(con, mejores_escuderias_2016)
+Escuderias_2016 <- dbGetQuery(con, mejores_escuderias_2016)
 
 ```
 
@@ -234,9 +237,9 @@ REmejores_escuderias2016 <- dbGetQuery(con, mejores_escuderias_2016)
 ## Mejores escuderias en 2015 ##
 
 mejores_escuderias_2015 <- "SELECT
-a.constructorId,
-a.name,
-c.year,
+a.constructorId AS ID,
+a.name AS Escuderia,
+c.year AS Año,
 SUM(b.points) AS TotalPuntos,
 sum(b.wins) AS TotalVictorias
 FROM constructors a
@@ -247,16 +250,16 @@ GROUP BY a.constructorId
 ORDER BY TotalPuntos DESC
 LIMIT 5;"
 
-REmejores_escuderias2015 <- dbGetQuery(con, mejores_escuderias_2015)
+Escuderias_2015 <- dbGetQuery(con, mejores_escuderias_2015)
 ```
 
 ```{r}
 ## Mejores escuderias en 2014 ##
 
 mejores_escuderias_2014 <- "SELECT
-a.constructorId,
-a.name,
-c.year,
+a.constructorId AS ID,
+a.name AS Escuderia,
+c.year AS Año,
 SUM(b.points) AS TotalPuntos,
 sum(b.wins) AS TotalVictorias
 FROM constructors a
@@ -267,7 +270,7 @@ GROUP BY a.constructorId
 ORDER BY TotalPuntos DESC
 LIMIT 5;"
 
-REmejores_escuderias2014 <- dbGetQuery(con, mejores_escuderias_2014)
+Escuderias_2014 <- dbGetQuery(con, mejores_escuderias_2014)
 
 ```
 
@@ -275,9 +278,9 @@ REmejores_escuderias2014 <- dbGetQuery(con, mejores_escuderias_2014)
 ## Mejores escuderias en 2013 ##
 
 mejores_escuderias_2013 <- "SELECT
-a.constructorId,
-a.name,
-c.year,
+a.constructorId AS ID,
+a.name AS Escuderia,
+c.year AS Año,
 SUM(b.points) AS TotalPuntos,
 sum(b.wins) AS TotalVictorias
 FROM constructors a
@@ -288,29 +291,10 @@ GROUP BY a.constructorId
 ORDER BY TotalPuntos DESC
 LIMIT 5;"
 
-REmejores_escuderias2013 <- dbGetQuery(con, mejores_escuderias_2013)
+Escuderias_2013 <- dbGetQuery(con, mejores_escuderias_2013)
 
 ## DE ESTA FORMA OBTENEMOS LAS 5 MEJORES ESCUDERIAS DURANTE 2017 - 2013 ##
 ```
-
-```{r}
-## Los 5 circuitos con mas carreras ##
-
-circuitos_carreras_5 <- "SELECT 
-a.circuitRef,
-a.name,
-a.location,
-a.country,
-COUNT(b.raceId) AS TotalCarreras
-FROM circuits a
-INNER JOIN races b ON a.circuitId = b.circuitId
-GROUP BY a.circuitId
-ORDER BY TotalCarreras DESC
-LIMIT 5;"
-
-circuitos_con_mascarreras <- dbGetQuery(con, circuitos_carreras_5) #de esta forma obtenemos los 5 circuitos con más carreras
-```
-
 
 ```{r}
 ## NUMERO DE VECES EN QUE CADA PILOTO HA TERMINADO ENTRE LOS TRES PRIMEROS ENTRE EL 2013 Y 2017 ##
@@ -579,13 +563,3 @@ ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas AND Total_Puntos DESC
 
 Retiro_Fallas_Parada_boxes_2013 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2013)
 ```
-
-
-
-
-
-
-
-
-
-
