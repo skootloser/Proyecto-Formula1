@@ -1,0 +1,862 @@
+---
+title: "Formula 1"
+subtitle: "Proyecto Final"
+author: "Grupo 5"
+date: "Marzo de 2025"
+output: pdf_document
+fontsize: 12pt
+lang: es-Mx
+toc: TRUE
+---
+
+
+```{r setup, include=FALSE}
+
+#inserción de data frame en Rstudio y llamado de librerias
+
+library(tidyverse)
+library(stringr)
+library(stringi)
+library(readr)
+library(gt) 
+library(dplyr)
+library(knitr)
+library(tinytex) 
+library(readxl)
+library(dplyr)
+library(RSQLite)
+library(DBI)
+library(writexl)
+
+
+# Conexión con data SQLite
+
+con <- dbConnect(RSQLite::SQLite(), dbname = "Formula1.sqlite")
+tablas <- dbListTables(con)
+print(tablas)
+
+# Query y creación de data frame
+
+DfFormula1 <- dbReadTable(con, tablas[1]) 
+
+corredores <-"SELECT * FROM drivers" 
+dfcorredores <- dbGetQuery(con ,corredores) 
+
+circuitos <-"SELECT * FROM circuits" 
+
+DfCircutitos <- dbGetQuery(con, circuitos)
+
+DfCircuitos <- dbReadTable(con, "circuits")
+
+#Salida de archivo excel para toda la base de datos
+
+lista_de_datos <- list()
+for (tabla in tablas) {
+  datos <- dbReadTable(con, tabla)
+  lista_de_datos[[tabla]] <- datos
+}
+write_xlsx(lista_de_datos, "Formula1.xlsx")
+
+
+```
+
+
+
+\pagebreak
+
+### **Resumen**
+
+La Fórmula 1 es la máxima categoría del automovilismo, un deporte que fusiona tecnología de punta, habilidad humana y estrategia. El análisis estadístico juega un papel crucial en la evaluación del rendimiento de pilotos y escuderías. En este contexto, el trabajo se centra en analizar el rendimiento de los cinco mejores pilotos y equipos durante las últimas cinco temporadas (2013-2017), un período marcado por la transición a motores híbridos.
+
+El estudio busca identificar los factores clave del éxito, analizando variables como velocidad, tiempos de vuelta, paradas en boxes y puntos acumulados con el objetivo de contribuir a una comprensión más profunda de la Fórmula 1 como un deporte donde la estrategia y habilidad se entrelazan.
+
+## **CAPÍTULO 1: PROBLEMA DE INVESTIGACIÓN**
+
+### **1.1 Planteamiento del problema**
+
+La Fórmula 1 tiene sus raíces en las carreras automovilísticas surgidas en Francia en 1894. De 1927 a 1934, el número de carreras consideradas Gran Premio creció hasta alcanzar dieciocho en 1934, el máximo antes de la Segunda Guerra Mundial. Inmediatamente después de la Segunda Guerra Mundial sólo hubo 4 carreras con categoría de Gran Premio. Hasta que, en 1947, la antigua AIACR se reorganizó, pasándose a llamar la Federación Internacional de Automovilismo (FIA). Organismo rector de deporte motor y promueve la movilidad segura, sostenible, y accesible para todos los usuarios de carreras de todo el mundo con sede en París, anunció que para 1950 unirían varios Grandes Premios para crear el Campeonato del Mundo de Fórmula 1 de Pilotos. Se estableció un sistema de puntuación y acordaron un total de siete carreras aptas para tal celebración.
+
+La primera carrera del Mundial se disputó el 13 de mayo en el circuito de Silverstone (Reino Unido). Los italianos fueron los protagonistas en estas primeras carreras del Campeonato del Mundo, tanto las marcas como los pilotos. El primer campeón del mundo fue Giuseppe Farina, al volante de un Alfa Romeo.
+
+La Fórmula 1 ha tenido a grandes pilotos que hicieron historia, nombres como Lewis Hamilton, Nikki Lauda y Checo Pérez se han convertido en sinónimos de velocidad y de adrenalina, de vivir al límite, y son ellos los que han conseguido superar tiempos extraordinarios. De igual forma la misma Fórmula 1 realizó un estudio para determinar qué pilotos han sido los más veloces en una sola vuelta en los últimos 40 años. En conjunto con Amazon Web Services, la F1 tomó datos de 1983, con lo que encontraron un top de pilotos que han alcanzado velocidades impresionantes.
+
+Es así como se determina que la historia de la Fórmula 1 ha atravesado muchísimos momentos. Desde su fundación oficial en 1950, diversos pilotos han marcado décadas y generaciones por lo cual dada la información proporcionada anteriormente se propone un estudio detallado para identificar en la actualidad el rendimiento de los mejores pilotos y subsecuentemente sus escuderías.
+
+### **1.2 Formulación del problema**
+
+¿Cuál fue el rendimiento de las últimas 5 temporadas de los cinco mejores pilotos y escuderías durante el periodo 2013 - 2017?
+
+### **1.3 Objetivos**
+
+#### **Objetivo general**
+
+Determinar el rendimiento de los mejores 5 pilotos y escuderías de las últimas 5 (2013-2017) temporadas de la F1
+
+#### **Objetivos específicos**
+
+1)  Identificar los últimos 5 mejores pilotos y escuderías de las últimas 5 temporadas.
+2)  Determinar el número total de puntos acumulados por cada piloto y equipo en cada temporada y realizar una comparación entre ellas
+3)  Cuantificar el número de carreras ganadas por cada piloto y equipo
+4)  Encontrar el número de veces en cada piloto y equipo ha terminado entre los tres primeros
+5)  Medir el número de vueltas más rápidas registrada por cada piloto
+6)  Evaluar el número de retiro por fallas mecánicas o parada en boxes
+
+### **1.5 Finalidad de la Investigación**
+
+Estudiar el desempeño de los mejores pilotos y sus escuderías correspondientes a lo largo de las últimas 5 temporadas analizando las estadísticas y estrategias de los equipos durante las carreras, incluyendo la parada en boxes para determinar las distintas variables presentes en cada equipo y así obtener los datos que ha llevado a la victoria o a estar cerca de la misma, de mucho de estos, logrando así la posibilidad de crear un precedente importante para futuros estudios y análisis, referenciando de igual forma la visión del lector y la manera en cómo ve este deporte.
+
+### **1.6 Alcance de la Investigación**
+
+#### **Cobertura horizontal**
+
+Escuela de Estadística y Ciencias Actuariales. Universidad Central de Venezuela (UCV). Parroquia San Pedro. Municipio Libertador. Caracas. Venezuela.
+
+#### **Cobertura vertical**
+
+Escuderías, Rendimiento, Pilotos
+
+## **CAPÍTULO 2: MARCO TEORICO**
+
+## **2.1 Conceptos básicos**
+
+Orígenes de la fórmula 1: La Fórmula 1 tiene sus raíces en las carreras automovilísticas surgidas en Francia en 1894. Sin embargo, el Campeonato Mundial de Fórmula 1 como lo conocemos hoy fue establecido en 1950 por la Federación Internacional del Automóvil (FIA). Desde su creación, la Fórmula 1 ha experimentado una evolución constante en términos de tecnología, seguridad y reglamentos. Ha pasado de ser un deporte dominado por la habilidad individual de los pilotos a un campo donde la tecnología y la estrategia juegan un papel crucial. La Fórmula 1 es un fenómeno global que atrae a millones de espectadores en todo el mundo. Es considerada la máxima expresión del automovilismo deportivo y un laboratorio de innovación tecnológica.
+
+Sistema de Puntuaciones y Victorias:  Las competiciones se abarcan con un sistema de puntajes que se les asignan a los pilotos según la posición en que finalicen cada carrera, delimitando la mayor cantidad de puntos a los conductores que finalicen la carrera en las primeras posiciones en la ronda final; mientras que las victorias se otorgan a los competidores que terminen la carrera en la primera posición o primer lugar de la última ronda, enumerando las victorias en base a los conductores que más puntos abarquen en la final de cada temporada en el Gran Mundial de Pilotos. La FIA delimitó un sistema de puntaje para cada piloto según su posición finalizada cada carrera el cual se mantiene vigente desde el año 2015. En base a las posiciones:
+
+-	1er puesto: 25 puntos
+-	2do puesto: 18 puntos 
+-	3er puesto: 15 puntos
+-	4to puesto: 12 puntos
+-	5to puesto: 10 puntos
+-	6to puesto: 8 puntos
+-	7mo puesto: 6 puntos 
+-	8vo puesto: 4 puntos
+-	9no puesto: 2 puntos
+-	10mo puesto: 1 punto
+-	11vo – 20vo puesto: 0 puntos
+
+Los puntos de las escuderías se evalúan a través del Campeonato Mundial de Constructores, este campeonato se determina sumando los puntos obtenidos por los dos pilotos de cada equipo en todas las carreras de la temporada. El rendimiento individual de cada piloto fuera de los puntajes o victorias se evalúa por su velocidad, consistencia, habilidad para adelantar y estrategia de carrera, mientras que el rendimiento de los monoplazas se evalúa por su velocidad máxima, aceleración, agarre en las curvas y fiabilidad.
+
+Temporadas analizadas (2013-2017): Este período estuvo marcado por importantes cambios tecnológicos, como la transición de los motores V8 atmosféricos a los motores híbridos V6 turbo en 2014.
+
+## **2.2 Importancia de la estadística en la fórmula 1**
+
+Las estadísticas proporcionan una medida objetiva del rendimiento del piloto, incluyendo la velocidad, la consistencia y la habilidad para adelantar, nos permite conocer información detallada sobre las capacidades de cada piloto dentro de las competiciones. Abordando lo analítico, es de gran utilidad los estudios estadísticos para el desarrollo de nuevas mejoras en motoras y monoplazas, impulsando a la inclusión de nueva tecnología aerodinámica. Desde el punto de vista económico, el análisis de cada piloto repercute en los resultados de cada campeonato permitiendo evaluar a los equipos de escuderías o constructores el trabajo de ellos en colaboración con pilotos de máximo interés. Los pilotos con estadísticas sobresalientes como múltiples victorias, campeonatos o récords aumentan su valor de marca, el premio monetario al final de cada campeonato se reparte entre la escudería y los pilotos, siendo el más importante el premio de Mónaco una celebración no solo de prestigio sino también de glamour. Las estadísticas se utilizan en campañas de marketing para promocionar a los pilotos, los equipos y la Fórmula 1 en general, funcionan como factores importantes para la negociación de contratos y salarios estipulados. Para el lector, las estadísticas realizadas en este análisis abordan una importancia específica sobre las capacidades que sacian la interrogante sobre los mejores 5 pilotos y escuderías específicamente durante el periodo 2013 a 2017 que proporciona una base objetiva y cuantitativa para evaluar el rendimiento de los pilotos en la Fórmula 1.
+
+## **2.3 Antecedentes de la investigación** 
+
+El estudio “Análisis Numérico del GP de Valencia F1 2012” escrito por Raúl Molina y José Miguel Calavia para la página web “Car and Drive the Formula 1” en base a fuentes oficiales de la FIA analiza los resultados obtenidos a final de temporada en el Campeonato Mundial de Pilotos de manera estadística descriptiva, proporcionando una visión de los resultados por cada piloto en la temporada de 2012 específicamente en Valencia, España. Nos permite evaluar un panorama acerca del estado de la temporada y ayuda a situar el análisis en relación con el estudio previo, permitiéndonos comprender el desarrollo de la investigación publicada y si existen lagunas de información no cubiertas hasta el momento. 
+
+El “Informe de Fin de Temporada de F1 2017” por Métricas F1 página web desarrollada para el análisis de puntos obtenidos por cada piloto proporciona un estudio con gráficos principalmente de barras comparativas con puntos, gráfico de dispersión e histogramas que nos proporcionan una vista del ranking oficial del Campeonato Mundial de Pilotos año 2017. En base a estos gráficos podemos interpretar resultados estadísticamente significativos, de igual manera se engloba resultados visuales para cada temporada estudiada, otorgando información adicional y de calidad durante el periodo 2013 – 2017.
+
+## **2.4 Justificación del estudio** 
+
+Este estudio se justifica por la necesidad de comprender los factores que influyen en el rendimiento en la Fórmula 1, especialmente en un período marcado por cambios tecnológicos significativos. A través del análisis estadístico, este estudio busca proporcionar una base sólida para evaluar el rendimiento de los pilotos y escuderías a lo largo de las últimas 5 temporadas, contribuyendo al campo de la estadística aplicada al deporte y proporcionando aplicaciones prácticas para los equipos y entrenadores. Además, y así obtener los datos que ha llevado a la victoria o a estar cerca de la misma, logrando así la posibilidad de crear un precedente importante para futuros estudios y análisis, referenciando la visión del lector y la manera en cómo ve este deporte, con una comprensión más profunda de la Fórmula 1 como un deporte que combina tecnología, estrategia y habilidad humana.
+
+## **2.5 Sistema de variables**
+
+Esta sección define las variables que serán objeto de estudio dentro del análisis estadístico y cómo se medirán las mismas, proporcionando una base para las observaciones de los datos. Las variables tomadas en cuenta para el estudio son las siguientes:
+
+-	Piloto: Es el conductor del monoplaza que participa en cada competición y forma parte de un equipo específico al igual que su escudería.
+
+-	Escudería o constructor: Una escudería es el equipo completo que diseña, construye y operan los monoplazas, su relación con el piloto es indispensable y bidireccional puesto que ambas son variables que dependen la una de la otra.
+
+
+-	Velocidad: Se relaciona con el piloto según la rapidez con la que éste maneje su monoplaza y se mide en kilómetros por hora.
+
+-	Tiempo: Se relaciona con la velocidad y comprende la duración de llegada y partida de cada piloto en su parada de box, se mide en segundos o milisegundos. También cuentan los minutos de duración de cada piloto al terminar cada carrera.
+
+-	Resultados de Carreras: Se relaciona con las demás variables, delimitando los resultados de cada piloto según cada carrera completada, en base a estos resultados se otorgan puntos y victorias.
+
+-	Puntos: Es la cantidad de unidades obtenidas por cada piloto según su posición al finalizar cada carrera, define los resultados finales de cada temporada.
+
+CAPÍTULO 3: MARCO METODOLÓGICO.
+
+3.1 Nivel de investigación
+
+Dentro de este orden de ideas, la investigación adoptará un enfoque cualitativo para describir y analizar el rendimiento de los mejores 5 pilotos y escuderías de las últimas 5 temporadas de la F1 (2013-2017) y así cumplir con nuestro objetivo general, el cual en grandes rasgos permitirá examinar sus posiciones y desempeños a lo largo de este período. Para facilitar la comprensión, los datos se describirán de manera gráfica, permitiendo una visualización más clara sobre lo que se desea analizar por medio del estudio.
+
+3.2 Población
+
+La población estuvo conformada por los datos de los constructores, conductores, circuitos, carreras, resultados y todo lo referente a esto por los 58 años que comprenden el mencionado archivo de datos.  
+
+3.3 Muestra
+
+Aunque el archivo de datos está delimitado desde 1959 hasta 2017, la investigación fue obtenida bajo la muestra de los años comprendidos entre 2013 y 2017, bajo todas las columnas creadas. 
+
+3.4 Técnicas de procesamiento y análisis de datos
+
+Para llevar a cabo el análisis, se visualizó el archivo bajo los años ya previamente delimitados, para luego la información ser analizada mediante técnicas estadísticas descriptivas con el objeto de  sacarle mayor provecho a la información proporcionada. 
+
+- Pasos para el procesamiento y análisis de datos:
+
+Datos
+El estudio se desarrolla en base a un archivo de registros de datos sobre las temporadas de la F1 durante 1950 – 2017, conformado por 13 tablas las cuales definiremos para trabajar con las de nuestro interés:
+-	Circuitos: Conforma la locación, condición y su nombre.
+-	Constructores: Identificación de cada constructor o escudería
+-	Resultados del constructor: Puntos obtenidos por escudería.
+-	Constructor Standing: Conjunto de puntos, posiciones y victorias de cada escudería o constructor.
+-	Conductores: Identificación de cada piloto y su número
+-	Clasificación de pilotos: Conjunto de puntos, posiciones y victorias de cada piloto.
+-	Tiempos de vuelta: Conjunto de posición, tiempo y lapso de cada conductor en cada carrera.
+-	Paradas en boxes: Conjunto de tiempo, duración en milisegundos y número de paradas por cada piloto en cada carrera.
+-	Calificativo: Resultados por cada escudería, piloto y carrera.
+-	Carreras: Identificación de cada carrera con su año, locación y fecha.
+-	Resultados: Conjunto de datos que proporcionan la posición final de cada conductor por carrera conformando el ranking de cada final de temporada con su año respectivo. 
+-	Temporadas: Es el año completo de competiciones que se llevan a cabo, todas las carreras efectuadas.
+-	Estatus: Se refleja en la posición de cada piloto en la clasificación del Campeonato Mundial de Pilotos.
+
+
+
+
+
+```{r}
+# Observar los mejores corredores del año 2017 en base a la suma de sus puntos y victorias
+
+Mejores_en_2017 <- "
+SELECT
+    a.driverRef AS Referencia,
+    a.forename AS Nombre,
+    a.surname Apellido,
+    a.number AS Número,
+    d.year AS Año,
+    SUM(b.points) AS TotalPuntos,
+    sum(b.wins) AS TotalVictorias
+FROM drivers a
+INNER JOIN driver_standings b ON a.driverId = b.driverId
+INNER JOIN races c ON b.raceId = c.raceId
+INNER JOIN seasons d ON c.year = d.year
+WHERE d.year = 2017
+GROUP BY a.driverId
+ORDER BY TotalPuntos DESC
+LIMIT 5;
+"
+Mejores_2017 <- dbGetQuery(con, Mejores_en_2017)
+```
+
+
+```{r}
+# Observar los mejores corredores del año 2016 en base a la suma de sus puntos y victorias
+
+Mejores_en_2016 <- "
+SELECT
+    a.driverRef AS Referencia,
+    a.forename AS Nombre,
+    a.surname Apellido,
+    a.number AS Número,
+    d.year AS Año,
+    SUM(b.points) AS TotalPuntos,
+    sum(b.wins) AS TotalVictorias
+FROM drivers a
+INNER JOIN driver_standings b ON a.driverId = b.driverId
+INNER JOIN races c ON b.raceId = c.raceId
+INNER JOIN seasons d ON c.year = d.year
+WHERE d.year = 2016
+GROUP BY a.driverId
+ORDER BY TotalPuntos DESC
+LIMIT 5;
+"
+Mejores_2016 <- dbGetQuery(con, Mejores_en_2016)
+
+```
+
+```{r}
+# Observar los mejores corredores del año 2015 en base a la suma de sus puntos y victorias
+
+Mejores_en_2015 <- "
+SELECT
+    a.driverRef AS Referencia,
+    a.forename AS Nombre,
+    a.surname Apellido,
+    a.number AS Número,
+    d.year AS Año,
+    SUM(b.points) AS TotalPuntos,
+    sum(b.wins) AS TotalVictorias
+FROM drivers a
+INNER JOIN driver_standings b ON a.driverId = b.driverId
+INNER JOIN races c ON b.raceId = c.raceId
+INNER JOIN seasons d ON c.year = d.year
+WHERE d.year = 2015
+GROUP BY a.driverId
+ORDER BY TotalPuntos DESC
+LIMIT 5;
+"
+
+Mejores_2015 <- dbGetQuery(con, Mejores_en_2015)
+```
+
+```{r}
+# Observar los mejores corredores del año 2014 en base a la suma de sus puntos y victorias
+
+Mejores_en_2014 <- "
+SELECT
+    a.driverRef AS Referencia,
+    a.forename AS Nombre,
+    a.surname Apellido,
+    a.number AS Número,
+    d.year AS Año,
+    SUM(b.points) AS TotalPuntos,
+    sum(b.wins) AS TotalVictorias
+FROM drivers a
+INNER JOIN driver_standings b ON a.driverId = b.driverId
+INNER JOIN races c ON b.raceId = c.raceId
+INNER JOIN seasons d ON c.year = d.year
+WHERE d.year = 2014
+GROUP BY a.driverId
+ORDER BY TotalPuntos DESC
+LIMIT 5;
+"
+
+Mejores_2014 <- dbGetQuery(con, Mejores_en_2014)
+```
+
+```{r}
+# Observar los mejores corredores del año 2013 en base a la suma de sus puntos y victorias
+
+Mejores_en_2013 <- "
+SELECT
+    a.driverRef AS Referencia,
+    a.forename AS Nombre,
+    a.surname Apellido,
+    a.number AS Número,
+    d.year AS Año,
+    SUM(b.points) AS TotalPuntos,
+    sum(b.wins) AS TotalVictorias
+FROM drivers a
+INNER JOIN driver_standings b ON a.driverId = b.driverId
+INNER JOIN races c ON b.raceId = c.raceId
+INNER JOIN seasons d ON c.year = d.year
+WHERE d.year = 2013
+GROUP BY a.driverId
+ORDER BY TotalPuntos DESC
+LIMIT 5;
+"
+
+Mejores_2013 <- dbGetQuery(con, Mejores_en_2013)
+
+#### DE ESTA FORMA OBTENEMOS EN TABLAS LOS 5 MEJORES CORREDORES DURANTE 2013 - 2017 ###
+```
+
+```{r}
+
+#### MEJORES ESCUDERIAS EN BASE SUS PUNTOS Y VICTORIAS DURANTE 2017 - 2013 ####
+
+### Mejores escuderias en 2017 ##
+
+mejores_escuderias_2017 <- "SELECT
+a.constructorId AS ID,
+a.name AS Escuderia,
+c.year AS Año,
+SUM(b.points) AS TotalPuntos,
+sum(b.wins) AS TotalVictorias
+FROM constructors a
+INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
+INNER JOIN races c ON c.raceId = b.raceId
+WHERE c.year = 2017
+GROUP BY a.constructorId
+ORDER BY TotalPuntos DESC
+LIMIT 5;"
+
+Escuderias_2017 <- dbGetQuery(con, mejores_escuderias_2017)
+
+```
+
+```{r}
+## Mejores escuderias en 2016 ##
+
+mejores_escuderias_2016 <- "SELECT
+a.constructorId AS ID,
+a.name AS Escuderia,
+c.year AS Año,
+SUM(b.points) AS TotalPuntos,
+sum(b.wins) AS TotalVictorias
+FROM constructors a
+INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
+INNER JOIN races c ON c.raceId = b.raceId
+WHERE c.year = 2016
+GROUP BY a.constructorId
+ORDER BY TotalPuntos DESC
+LIMIT 5;"
+
+Escuderias_2016 <- dbGetQuery(con, mejores_escuderias_2016)
+
+```
+
+```{r}
+
+## Mejores escuderias en 2015 ##
+
+mejores_escuderias_2015 <- "SELECT
+a.constructorId AS ID,
+a.name AS Escuderia,
+c.year AS Año,
+SUM(b.points) AS TotalPuntos,
+sum(b.wins) AS TotalVictorias
+FROM constructors a
+INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
+INNER JOIN races c ON c.raceId = b.raceId
+WHERE c.year = 2015
+GROUP BY a.constructorId
+ORDER BY TotalPuntos DESC
+LIMIT 5;"
+
+Escuderias_2015 <- dbGetQuery(con, mejores_escuderias_2015)
+```
+
+```{r}
+## Mejores escuderias en 2014 ##
+
+mejores_escuderias_2014 <- "SELECT
+a.constructorId AS ID,
+a.name AS Escuderia,
+c.year AS Año,
+SUM(b.points) AS TotalPuntos,
+sum(b.wins) AS TotalVictorias
+FROM constructors a
+INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
+INNER JOIN races c ON c.raceId = b.raceId
+WHERE c.year = 2014
+GROUP BY a.constructorId
+ORDER BY TotalPuntos DESC
+LIMIT 5;"
+
+Escuderias_2014 <- dbGetQuery(con, mejores_escuderias_2014)
+
+```
+
+```{r}
+## Mejores escuderias en 2013 ##
+
+mejores_escuderias_2013 <- "SELECT
+a.constructorId AS ID,
+a.name AS Escuderia,
+c.year AS Año,
+SUM(b.points) AS TotalPuntos,
+sum(b.wins) AS TotalVictorias
+FROM constructors a
+INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
+INNER JOIN races c ON c.raceId = b.raceId
+WHERE c.year = 2013
+GROUP BY a.constructorId
+ORDER BY TotalPuntos DESC
+LIMIT 5;"
+
+Escuderias_2013 <- dbGetQuery(con, mejores_escuderias_2013)
+
+## DE ESTA FORMA OBTENEMOS LAS 5 MEJORES ESCUDERIAS DURANTE 2017 - 2013 ##
+```
+
+
+
+
+
+
+```{r}
+## NUMERO DE VECES EN QUE CADA PILOTO Y CONSTRUCTOR HA TERMINADO ENTRE LOS TRES PRIMEROS ENTRE EL 2013 Y 2017 ##
+
+## 2013 ##
+
+Podios_Pilotos_2013 <- "SELECT d.driverId AS ID_Pilotos,
+d.forename AS Nombre,
+       d.surname AS Apellido,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       drivers d ON d.driverId = r.driverId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2013
+GROUP BY
+       d.driverId, 
+	   d.forename, d.surname
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_Pilotos_2013 <- dbGetQuery(con, Podios_Pilotos_2013) 
+```
+
+```{r}
+Podios_Constructor_2013 <- "SELECT c.constructorId AS ID_Constructor,
+       c.name AS Nombre,
+       c.nationality AS nacionalidad,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       constructors c ON c.constructorId = r.constructorId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2013
+GROUP BY
+       c.constructorId, c.name, c.nationality
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_Constructor_2013 <- dbGetQuery(con, Podios_Constructor_2013)
+
+```
+
+## Graffico de sectores  ##
+
+```{r}
+
+
+
+
+
+```
+
+
+
+```{r}
+## 2014 ##
+
+Podios_Pilotos_2014 <- "SELECT d.driverId AS ID_Pilotos,
+       d.forename AS Nombre,
+       d.surname AS Apellido,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       drivers d ON d.driverId = r.driverId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2014
+GROUP BY
+       d.driverId, 
+	   d.forename, d.surname
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_Pilotos_2014 <- dbGetQuery(con, Podios_Pilotos_2014) 
+
+```
+
+```{r}
+Podios_Constructor_2014 <- "SELECT c.constructorId AS ID_Constructor,
+       c.name AS Nombre,
+       c.nationality AS nacionalidad,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       constructors c ON c.constructorId = r.constructorId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2014
+GROUP BY
+       c.constructorId, c.name, c.nationality
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_Constructor_2014 <- dbGetQuery(con, Podios_Constructor_2014)
+```
+
+
+
+
+```{r}
+## 2015 ## 
+
+Podios_Pilotos_2015 <- "SELECT d.driverId AS ID_Pilotos,
+       d.forename AS Nombre,
+       d.surname AS Apellido,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       drivers d ON d.driverId = r.driverId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2015
+GROUP BY
+       d.driverId, 
+	   d.forename, d.surname
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_Pilotos_2015 <- dbGetQuery(con, Podios_Pilotos_2015) 
+
+```
+
+```{r}
+Podios_Constructor_2015 <- "SELECT c.constructorId AS ID_Constructor,
+       c.name AS Nombre,
+       c.nationality AS nacionalidad,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       constructors c ON c.constructorId = r.constructorId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2015
+GROUP BY
+       c.constructorId, c.name, c.nationality
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_Constructor_2015 <- dbGetQuery(con, Podios_Constructor_2015)
+```
+
+
+
+
+```{r}
+## 2016 ## 
+
+Podios_Pilotos_2016 <- "SELECT d.driverId AS ID_Pilotos,
+       d.forename AS Nombre,
+       d.surname AS Apellido,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       drivers d ON d.driverId = r.driverId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2016
+GROUP BY
+       d.driverId, 
+	   d.forename, d.surname
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_Pilotos_2016 <- dbGetQuery(con, Podios_Pilotos_2016) 
+
+```
+
+```{r}
+Podios_Constructor_2016 <- "SELECT c.constructorId AS ID_Constructor,
+       c.name AS Nombre,
+       c.nationality AS nacionalidad,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       constructors c ON c.constructorId = r.constructorId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2016
+GROUP BY
+       c.constructorId, c.name, c.nationality
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_Constructor_2016 <- dbGetQuery(con, Podios_Constructor_2016)
+```
+
+
+
+
+
+```{r}
+## 2017 ##
+
+Podios_Pilotos_2017 <- "SELECT d.driverId AS ID_Pilotos,
+       d.forename AS Nombre,
+       d.surname AS Apellido,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       drivers d ON d.driverId = r.driverId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2017
+GROUP BY
+       d.driverId, 
+	   d.forename, d.surname
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_PILOTOS_2017 <- dbGetQuery(con, Podios_Pilotos_2017) 
+
+```
+
+```{r}
+Podios_Constructor_2017 <- "SELECT c.constructorId AS ID_Constructor,
+       c.name AS Nombre,
+       c.nationality AS nacionalidad,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       constructors c ON c.constructorId = r.constructorId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2017
+GROUP BY
+       c.constructorId, c.name, c.nationality
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_Constructor_2017 <- dbGetQuery(con, Podios_Constructor_2017)
+```
+
+
+
+
+
+
+
+```{r}
+## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2017 ##
+
+Retiro_Fallas_Parada_boxes_2017 <- "SELECT r.year AS Año,
+       r.name AS carrera,
+       d.forename || ' ' || d.driverRef AS Piloto,
+       COUNT(DISTINCT CASE WHEN s.status like '%Mechanical%' OR '%Electrical%' OR '%Engine misfire%' OR '%Engine fire%'  THEN res.resultId END) AS retiros_por_fallas_mecanicas,
+       COUNT(DISTINCT ps.stop) AS paradas_en_boxes
+FROM drivers d INNER JOIN results res ON d.driverId = res.driverId
+INNER JOIN driver_standings e ON d.driverId = e.driverId
+INNER JOIN races r ON res.raceId = r.raceId
+LEFT JOIN status s ON res.statusId = s.statusId
+LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
+WHERE r.year == 2017 AND d.driverRef IN ('hamilton', 'vettel', 'bottas', 'ricciardo', 'raikkonen')
+GROUP BY d.driverId, r.raceId
+ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
+
+Retiro_Fallas_Parada_boxes_2017 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2017)
+```
+
+```{r}
+## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2016 ##
+
+Retiro_Fallas_Parada_boxes_2016 <- "SELECT r.year AS Año,
+       r.name AS carrera,
+       d.forename || ' ' || d.driverRef AS Piloto,
+       COUNT(DISTINCT CASE WHEN s.status like '%Mechanical%' OR '%Electrical%' OR '%Engine misfire%' OR '%Engine fire%'  THEN res.resultId END) AS retiros_por_fallas_mecanicas,
+       COUNT(DISTINCT ps.stop) AS paradas_en_boxes
+FROM drivers d INNER JOIN results res ON d.driverId = res.driverId
+INNER JOIN driver_standings e ON d.driverId = e.driverId
+INNER JOIN races r ON res.raceId = r.raceId
+LEFT JOIN status s ON res.statusId = s.statusId
+LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
+WHERE r.year == 2016 AND d.driverRef IN ('rosberg', 'hamilton', 'ricciardo', 'vettel', 'raikkonen')
+GROUP BY d.driverId, r.raceId
+ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
+
+Retiro_Fallas_Parada_boxes_2016 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2016)
+```
+
+```{r}
+## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2015 ##
+
+Retiro_Fallas_Parada_boxes_2015 <- "SELECT r.year AS Año,
+       r.name AS carrera,
+       d.forename || ' ' || d.driverRef AS Piloto,
+       COUNT(DISTINCT CASE WHEN s.status like '%Mechanical%' OR '%Electrical%' OR '%Engine misfire%' OR '%Engine fire%'  THEN res.resultId END) AS retiros_por_fallas_mecanicas,
+       COUNT(DISTINCT ps.stop) AS paradas_en_boxes
+FROM drivers d INNER JOIN results res ON d.driverId = res.driverId
+INNER JOIN driver_standings e ON d.driverId = e.driverId
+INNER JOIN races r ON res.raceId = r.raceId
+LEFT JOIN status s ON res.statusId = s.statusId
+LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
+WHERE r.year == 2015 AND d.driverRef IN ('hamilton', 'rosberg', 'vettel', 'raikkonen', 'bottas')
+GROUP BY d.driverId, r.raceId
+ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
+
+Retiro_Fallas_Parada_boxes_2015 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2015)
+```
+
+```{r}
+## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2014
+
+Retiro_Fallas_Parada_boxes_2014 <- "SELECT r.year AS Año,
+       r.name AS carrera,
+       d.forename || ' ' || d.driverRef AS Piloto,
+       COUNT(DISTINCT CASE WHEN s.status like '%Mechanical%' OR '%Electrical%' OR '%Engine misfire%' OR '%Engine fire%'  THEN res.resultId END) AS retiros_por_fallas_mecanicas,
+       COUNT(DISTINCT ps.stop) AS paradas_en_boxes
+FROM drivers d INNER JOIN results res ON d.driverId = res.driverId
+INNER JOIN driver_standings e ON d.driverId = e.driverId
+INNER JOIN races r ON res.raceId = r.raceId
+LEFT JOIN status s ON res.statusId = s.statusId
+LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
+WHERE r.year == 2014 AND d.driverRef IN ('rosberg', 'hamilton', 'ricciardo', 'alonso', 'bottas')
+GROUP BY d.driverId, r.raceId
+ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
+
+Retiro_Fallas_Parada_boxes_2014 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2014)
+```
+
+```{r}
+## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2013 ##
+
+Retiro_Fallas_Parada_boxes_2013 <- "SELECT r.year AS Año,
+       r.name AS carrera,
+       d.forename || ' ' || d.driverRef AS Piloto,
+       COUNT(DISTINCT CASE WHEN s.status like '%Mechanical%' OR '%Electrical%' OR '%Engine misfire%' OR '%Engine fire%'  THEN res.resultId END) AS retiros_por_fallas_mecanicas,
+       COUNT(DISTINCT ps.stop) AS paradas_en_boxes
+FROM drivers d INNER JOIN results res ON d.driverId = res.driverId
+INNER JOIN driver_standings e ON d.driverId = e.driverId
+INNER JOIN races r ON res.raceId = r.raceId
+LEFT JOIN status s ON res.statusId = s.statusId
+LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
+WHERE r.year == 2013 AND d.driverRef IN ('vettel', 'alonso', 'raikkonen', 'hamilton', 'webber')
+GROUP BY d.driverId, r.raceId
+ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
+
+Retiro_Fallas_Parada_boxes_2013 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2013)
+```
