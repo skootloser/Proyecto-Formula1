@@ -54,6 +54,7 @@ for (tabla in tablas) {
 }
 write_xlsx(lista_de_datos, "Formula1.xlsx")
 
+
 # Cerrar la conexión a la base de datos
 dbDisconnect(con)
 
@@ -137,6 +138,13 @@ LIMIT 5;
 "
 Mejores_2017 <- dbGetQuery(con, Mejores_en_2017)
 ```
+
+## **Histograma de Puntos y Victorias de Corredores Destacados en 2017**
+
+```{r}
+
+```
+
 
 ```{r}
 # Observar los mejores corredores del año 2016 en base a la suma de sus puntos y victorias
