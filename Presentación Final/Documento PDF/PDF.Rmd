@@ -59,6 +59,60 @@ dbDisconnect(con)
 
 ```
 
+![logo de la Universidad Central de Venezuela (UCV)](ucv.png)
+
+\pagebreak
+
+### **Resumen**
+
+La Fórmula 1 es la máxima categoría del automovilismo, un deporte que fusiona tecnología de punta, habilidad humana y estrategia. El análisis estadístico juega un papel crucial en la evaluación del rendimiento de pilotos y escuderías. En este contexto, el trabajo se centra en analizar el rendimiento de los cinco mejores pilotos y equipos durante las últimas cinco temporadas (2013-2017), un período marcado por la transición a motores híbridos.
+
+El estudio busca identificar los factores clave del éxito, analizando variables como velocidad, tiempos de vuelta, paradas en boxes y puntos acumulados con el objetivo de contribuir a una comprensión más profunda de la Fórmula 1 como un deporte donde la estrategia y habilidad se entrelazan.
+
+## **CAPÍTULO 1: PROBLEMA DE INVESTIGACIÓN**
+
+### **1.1 Planteamiento del problema**
+
+La Fórmula 1 tiene sus raíces en las carreras automovilísticas surgidas en Francia en 1894. De 1927 a 1934, el número de carreras consideradas Gran Premio creció hasta alcanzar dieciocho en 1934, el máximo antes de la Segunda Guerra Mundial. Inmediatamente después de la Segunda Guerra Mundial sólo hubo 4 carreras con categoría de Gran Premio. Hasta que, en 1947, la antigua AIACR se reorganizó, pasándose a llamar la Federación Internacional de Automovilismo (FIA). Organismo rector de deporte motor y promueve la movilidad segura, sostenible, y accesible para todos los usuarios de carreras de todo el mundo con sede en París, anunció que para 1950 unirían varios Grandes Premios para crear el Campeonato del Mundo de Fórmula 1 de Pilotos. Se estableció un sistema de puntuación y acordaron un total de siete carreras aptas para tal celebración.
+
+La primera carrera del Mundial se disputó el 13 de mayo en el circuito de Silverstone (Reino Unido). Los italianos fueron los protagonistas en estas primeras carreras del Campeonato del Mundo, tanto las marcas como los pilotos. El primer campeón del mundo fue Giuseppe Farina, al volante de un Alfa Romeo.
+
+La Fórmula 1 ha tenido a grandes pilotos que hicieron historia, nombres como Lewis Hamilton, Nikki Lauda y Checo Pérez se han convertido en sinónimos de velocidad y de adrenalina, de vivir al límite, y son ellos los que han conseguido superar tiempos extraordinarios. De igual forma la misma Fórmula 1 realizó un estudio para determinar qué pilotos han sido los más veloces en una sola vuelta en los últimos 40 años. En conjunto con Amazon Web Services, la F1 tomó datos de 1983, con lo que encontraron un top de pilotos que han alcanzado velocidades impresionantes.
+
+Es así como se determina que la historia de la Fórmula 1 ha atravesado muchísimos momentos. Desde su fundación oficial en 1950, diversos pilotos han marcado décadas y generaciones por lo cual dada la información proporcionada anteriormente se propone un estudio detallado para identificar en la actualidad el rendimiento de los mejores pilotos y subsecuentemente sus escuderías.
+
+### **1.2 Formulación del problema**
+
+¿Cuál fue el rendimiento de las últimas 5 temporadas de los cinco mejores pilotos y escuderías durante el periodo 2013 - 2017?
+
+### **1.3 Objetivos**
+
+#### **Objetivo general**
+
+Determinar el rendimiento de los mejores 5 pilotos y escuderías de las últimas 5 (2013-2017) temporadas de la F1
+
+#### **Objetivos específicos**
+
+1)  Identificar los últimos 5 mejores pilotos y escuderías de las últimas 5 temporadas.
+2)  Determinar el número total de puntos acumulados por cada piloto y equipo en cada temporada y realizar una comparación entre ellas
+3)  Cuantificar el número de carreras ganadas por cada piloto y equipo
+4)  Encontrar el número de veces en cada piloto y equipo ha terminado entre los tres primeros
+5)  Medir el número de vueltas más rápidas registrada por cada piloto
+6)  Evaluar el número de retiro por fallas mecánicas o parada en boxes
+
+### **1.5 Finalidad de la Investigación**
+
+Estudiar el desempeño de los mejores pilotos y sus escuderías correspondientes a lo largo de las últimas 5 temporadas analizando las estadísticas y estrategias de los equipos durante las carreras, incluyendo la parada en boxes para determinar las distintas variables presentes en cada equipo y así obtener los datos que ha llevado a la victoria o a estar cerca de la misma, de mucho de estos, logrando así la posibilidad de crear un precedente importante para futuros estudios y análisis, referenciando de igual forma la visión del lector y la manera en cómo ve este deporte.
+
+### **1.6 Alcance de la Investigación**
+
+#### **Cobertura horizontal**
+
+Escuela de Estadística y Ciencias Actuariales. Universidad Central de Venezuela (UCV). Parroquia San Pedro. Municipio Libertador. Caracas. Venezuela.
+
+#### **Cobertura vertical**
+
+Escuderías, Rendimiento, Pilotos
 
 ```{r}
 # Observar los mejores corredores del año 2017 en base a la suma de sus puntos y victorias
@@ -158,7 +212,6 @@ LIMIT 5;
 
 Mejores_2014 <- dbGetQuery(con, Mejores_en_2014)
 ```
-
 
 ```{r}
 # Observar los mejores corredores del año 2013 en base a la suma de sus puntos y victorias
@@ -327,7 +380,6 @@ LIMIT 3;"
 Podios_2013 <- dbGetQuery(con, Podios_2013) 
 ```
 
-
 ```{r}
 ## 2014 ##
 
@@ -358,8 +410,6 @@ Podios_2014 <- dbGetQuery(con, Podios_2014)
 
 ```
 
-
-
 ```{r}
 ## 2015 ## 
 
@@ -389,7 +439,6 @@ LIMIT 3;"
 Podios_2015 <- dbGetQuery(con, Podios_2015) 
 
 ```
-
 
 ```{r}
 ## 2016 ## 
@@ -495,7 +544,6 @@ ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas AND Total_Puntos DESC
 Retiro_Fallas_Parada_boxes_2016 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2016)
 ```
 
-
 ```{r}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2015 ##
 
@@ -518,7 +566,6 @@ ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas AND Total_Puntos DESC
 Retiro_Fallas_Parada_boxes_2015 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2015)
 ```
 
-
 ```{r}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2014
 
@@ -540,7 +587,6 @@ ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas AND Total_Puntos DESC
 
 Retiro_Fallas_Parada_boxes_2014 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2014)
 ```
-
 
 ```{r}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2013 ##
