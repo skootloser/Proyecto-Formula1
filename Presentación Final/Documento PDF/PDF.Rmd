@@ -317,8 +317,12 @@ circuitos_con_mascarreras <- dbGetQuery(con, circuitos_carreras_5) #de esta form
 
 ## 2013 ##
 
-Mejores_pilotos_2013 <- "SELECT d.driverId AS ID_Pilotos,
-       d.forename AS Nombre,
+Podios_2013 <- "SELECT d.driverId AS ID_Pilotos,
+```
+
+
+```{r}
+d.forename AS Nombre,
        d.surname AS Apellido,
        s.year AS temporada,   
        SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
@@ -340,7 +344,7 @@ GROUP BY
 ORDER BY Cantidad_Podios DESC
 LIMIT 3;"
 
-Mejores_pilotos_2013 <- dbGetQuery(con, Mejores_pilotos) 
+Podios_2013 <- dbGetQuery(con, Podios_2013) 
 
 ```
 
@@ -348,7 +352,7 @@ Mejores_pilotos_2013 <- dbGetQuery(con, Mejores_pilotos)
 ```{r}
 ## 2014 ##
 
-Mejores_pilotos_2014 <- "SELECT d.driverId AS ID_Pilotos,
+Podios_2014 <- "SELECT d.driverId AS ID_Pilotos,
        d.forename AS Nombre,
        d.surname AS Apellido,
        s.year AS temporada,   
@@ -370,7 +374,11 @@ GROUP BY
 	   d.forename, d.surname
 ORDER BY Cantidad_Podios DESC
 LIMIT 3;"
+
+Podios_2014 <- dbGetQuery(con, Podios_2014) 
+
 ```
+
 
 
 
