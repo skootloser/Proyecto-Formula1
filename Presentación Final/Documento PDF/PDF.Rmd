@@ -1,6 +1,6 @@
 ---
-title: "Formula 1"
-subtitle: "Proyecto Final"
+title: "El quinteto de la excelencia:"
+subtitle: "Un estudio de análisis sobre los pilotos y escuderias más destacados entre los años 2013 - 2017 de la Fórmula 1"
 author: "Grupo 5"
 date: "Marzo de 2025"
 output: 
@@ -32,7 +32,6 @@ library(RSQLite)
 library(DBI)
 library(writexl)
 library(tinytex)
-library(DT)
 
 # Conexión con data SQLite
 
@@ -103,8 +102,7 @@ Determinar el rendimiento de los mejores 5 pilotos y escuderías de las últimas
 2)  Determinar el número total de puntos acumulados por cada piloto y equipo en cada temporada y realizar una comparación entre ellas
 3)  Cuantificar el número de carreras ganadas por cada piloto y equipo
 4)  Encontrar el número de veces en cada piloto y equipo ha terminado entre los tres primeros
-5)  Medir el número de vueltas más rápidas registrada por cada piloto
-6)  Evaluar el número de retiro por fallas mecánicas o parada en boxes
+5)  Evaluar el número de retiro por fallas mecánicas o parada en boxes
 
 ### 1.5 Finalidad de la Investigación
 
@@ -125,7 +123,7 @@ Venezuela.
 
 Escuderías, Rendimiento, Pilotos
 
-## CAPÍTULO 2: MARCO TEORICO
+## CAPÍTULO 2: MARCO TEÓRICO
 
 ### 2.1 Conceptos básicos
 
@@ -198,7 +196,7 @@ Las variables tomadas en cuenta para el estudio son las siguientes:
 
 -   Puntos: Es la cantidad de unidades obtenidas por cada piloto según su posición al finalizar cada carrera, define los resultados finales de cada temporada.
 
-## CAPÍTULO 3: MARCO METODOLÓGICO.
+## CAPÍTULO 3: MARCO METODOLÓGICO
 
 ### 3.1 Nivel de investigación
 
@@ -243,7 +241,7 @@ Datos El estudio se desarrolla en base a un archivo de registros de datos sobre 
 
 -   Estatus: Se refleja en la posición de cada piloto en la clasificación del Campeonato Mundial de Pilotos.
 
-## Analisis
+## CAPÍTULO 4: ANÁLISIS Y INTERPRETACIÓN
 
 ### Temporada 2013
 
@@ -271,6 +269,27 @@ LIMIT 5;
 
 Mejores_2013 <- dbGetQuery(con, Mejores_en_2013)
 
+#### DE ESTA FORMA OBTENEMOS EN TABLAS LOS 5 MEJORES CORREDORES DURANTE 2013 - 2017 ###
+
+Mejores_2013 %>% 
+  gt(rowname_col = "Piloto") %>%
+  tab_header(title = "Mejores pilotos",subtitle = "Temporada 2013") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año, Referencia)) %>%
+  cols_merge(
+    columns = c(Nombre, Apellido),
+    pattern = NULL)%>% 
+  cols_label(
+    Nombre = "Piloto")%>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 1."))
+
 ## Grafico de barras horizontal
 
 ## Nueva columna llamada puntos_victorias
@@ -283,7 +302,6 @@ Grafico_2013 <- ggplot(Mejores_2013, aes(x = reorder(paste(Nombre, Apellido), Pu
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
 
  print(Grafico_2013)
-
 ```
 
 ```{r, echo=FALSE}
@@ -315,6 +333,30 @@ ORDER BY Cantidad_Podios DESC
 LIMIT 3;"
 
 Podios_Pilotos_2013 <- dbGetQuery(con, Podios_Pilotos_2013) 
+
+Podios_Pilotos_2013 %>% 
+  gt(rowname_col = "Podios pilotos") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total"
+             ) %>%  
+  tab_header(title = "Top 3 pilotos en podios",subtitle = "Temporada 2013") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ",") %>%
+  cols_hide(columns = c(temporada, ID_Pilotos)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  cols_merge(
+    columns = c(Nombre, Apellido),
+    pattern = NULL)%>% 
+  cols_label(
+    Nombre = "Piloto"
+  )  %>% 
+  tab_source_note(source_note = md("Tabla nro. 3."))
 ```
 
 ```{r, echo=FALSE}
@@ -342,6 +384,27 @@ LIMIT 3;"
 
 Podios_Constructor_2013 <- dbGetQuery(con, Podios_Constructor_2013)
 
+Podios_Constructor_2013 %>% 
+  gt(rowname_col = "Podios constructor") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total",
+             nacionalidad = "País"
+             ) %>%  
+  tab_header(title = "Top 3 podios de constructores",subtitle = "Temporada 2013") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(temporada, ID_Constructor)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 4."))
+
+
 ```
 
 ```{r, echo=FALSE}
@@ -363,11 +426,23 @@ LIMIT 5;"
 
 Escuderias_2013 <- dbGetQuery(con, mejores_escuderias_2013)
 
-## Grafico de barras horizontal
+## DE ESTA FORMA OBTENEMOS LAS 5 MEJORES ESCUDERIAS DURANTE 2017 - 2013 ##
 
-## Nueva columna llamada puntos_victorias
+Escuderias_2013 %>% 
+  gt(rowname_col = "Escuderia") %>%
+  tab_header(title = "Mejores escuderias",subtitle = "Temporada 2013") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año, ID)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 2."))
 
- Escuderias_2013 <- Escuderias_2013 %>% 
+Escuderias_2013 <- Escuderias_2013 %>% 
   mutate(Puntos_Victorias = Puntos + Victorias)
 
 Grafico_Escuderias_2013 <- ggplot(Escuderias_2013, aes(x = reorder(Escuderia, Puntos_Victorias), y = Puntos_Victorias)) +
@@ -377,55 +452,68 @@ Grafico_Escuderias_2013 <- ggplot(Escuderias_2013, aes(x = reorder(Escuderia, Pu
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
 
  print(Grafico_Escuderias_2013)
-
 ```
 
 ```{r, echo=FALSE}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2013 ##
 
-Retiro_Fallas_Parada_boxes_2013 <- "SELECT r.year AS Año,
-       r.name AS carrera,
-       d.forename || ' ' || d.driverRef AS Piloto,
-       COUNT(DISTINCT CASE WHEN s.status like '%Mechanical%' OR '%Electrical%' OR '%Engine misfire%' OR '%Engine fire%'  THEN res.resultId END) AS retiros_por_fallas_mecanicas,
-       COUNT(DISTINCT ps.stop) AS paradas_en_boxes
-FROM drivers d INNER JOIN results res ON d.driverId = res.driverId
+Retiro_Fallas_Parada_boxes_2013 <- "SELECT 
+    r.year AS Año, 
+    d.forename || ' ' || d.driverRef AS Piloto,
+    COUNT(DISTINCT CASE 
+        WHEN s.status LIKE '%Mechanical%' 
+          OR s.status LIKE '%Electrical%' 
+          OR s.status LIKE '%Engine misfire%' 
+          OR s.status LIKE '%Engine fire%' 
+        THEN res.resultId 
+    END) AS retiros_por_fallas_mecanicas,
+    SUM(ps.stop) AS total_paradas_en_boxes
+FROM drivers d
+INNER JOIN results res ON d.driverId = res.driverId
 INNER JOIN driver_standings e ON d.driverId = e.driverId
 INNER JOIN races r ON res.raceId = r.raceId
 LEFT JOIN status s ON res.statusId = s.statusId
 LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
-WHERE r.year == 2013 AND d.driverRef IN ('vettel', 'alonso', 'raikkonen', 'hamilton', 'webber')
-GROUP BY d.driverId, r.raceId
-ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
+WHERE r.year = 2013
+  AND d.driverRef IN ('vettel', 'alonso', 'raikkonen', 'hamilton', 'webber')
+GROUP BY d.driverId
+ORDER BY total_paradas_en_boxes DESC, retiros_por_fallas_mecanicas DESC;"
 
 Retiro_Fallas_Parada_boxes_2013 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2013)
+
+Retiro_Fallas_Parada_boxes_2013 %>% 
+  gt(rowname_col = "Parada en boxes") %>%
+  cols_label(retiros_por_fallas_mecanicas = "Retiro por fallas mecanicas",
+             total_paradas_en_boxes = "Parada en boxes"
+             ) %>%  
+  tab_header(title = "Parada en boxes",subtitle = "Temporada 2013") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año)) %>%
+    cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 5."))
 
 #Grafico de lineas ##
 
 grafico_paradas_boxes <- ggplot(Retiro_Fallas_Parada_boxes_2013, aes(x = Piloto, y = total_paradas_en_boxes, group = 1)) +
-  geom_line(color = "darkblue", size = 1.2) +
+  geom_line(color = "darkblue", linewidth = 1.2) +
   geom_point(color = "darkblue", size = 3) + 
   labs(title = "Total Paradas en Boxes por Piloto",
        x = "Piloto",
        y = "Total Paradas en Boxes") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(panel.background = element_blank(),)
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(panel.background = element_blank())
 
 
 print(grafico_paradas_boxes)
 
-
-
-
-
-
-
-
-
-
-
-
-
 ```
+
 
 ### Temporada 2014
 
@@ -453,6 +541,25 @@ LIMIT 5;
 
 Mejores_2014 <- dbGetQuery(con, Mejores_en_2014)
 
+Mejores_2014 %>% 
+  gt(rowname_col = "Piloto") %>%
+  tab_header(title = "Mejores pilotos",subtitle = "Temporada 2014") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año, Referencia)) %>%
+  cols_merge(
+    columns = c(Nombre, Apellido),
+    pattern = NULL)%>% 
+  cols_label(
+    Nombre = "Piloto")%>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 1."))
+
 ## Grafico de barras horizontal
 
 ## Nueva columna llamada puntos_victorias
@@ -465,7 +572,6 @@ Grafico_2014 <- ggplot(Mejores_2014, aes(x = reorder(paste(Nombre, Apellido), Pu
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
 
  print(Grafico_2014)
-
 ```
 
 ```{r, echo=FALSE}
@@ -487,10 +593,19 @@ LIMIT 5;"
 
 Escuderias_2014 <- dbGetQuery(con, mejores_escuderias_2014)
 
-
-## Grafico de barras horizontal
-
-## Nueva columna llamada puntos_victorias
+Escuderias_2014 %>% 
+  gt(rowname_col = "Escuderia") %>%
+  tab_header(title = "Mejores escuderias",subtitle = "Temporada 2014") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año, ID)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 2."))
 
  Escuderias_2014 <- Escuderias_2014 %>% 
   mutate(Puntos_Victorias = Puntos + Victorias)
@@ -502,7 +617,6 @@ Grafico_Escuderias_2014 <- ggplot(Escuderias_2014, aes(x = reorder(Escuderia, Pu
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
 
  print(Grafico_Escuderias_2014)
-
 
 
 ```
@@ -535,6 +649,30 @@ LIMIT 3;"
 
 Podios_Pilotos_2014 <- dbGetQuery(con, Podios_Pilotos_2014) 
 
+Podios_Pilotos_2014 %>% 
+  gt(rowname_col = "Podios pilotos") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total"
+             ) %>%  
+  tab_header(title = "Top 3 pilotos en podios",subtitle = "Temporada 2014") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ",") %>%
+  cols_hide(columns = c(temporada, ID_Pilotos)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  cols_merge(
+    columns = c(Nombre, Apellido),
+    pattern = NULL)%>% 
+  cols_label(
+    Nombre = "Piloto"
+  )  %>% 
+  tab_source_note(source_note = md("Tabla nro. 3."))
+
 ```
 
 ```{r, echo=FALSE}
@@ -561,31 +699,77 @@ ORDER BY Cantidad_Podios DESC
 LIMIT 3;"
 
 Podios_Constructor_2014 <- dbGetQuery(con, Podios_Constructor_2014)
+
+Podios_Constructor_2014 %>% 
+  gt(rowname_col = "Podios constructor") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total",
+             nacionalidad = "País"
+             ) %>%  
+  tab_header(title = "Top 3 podios de constructores",subtitle = "Temporada 2014") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(temporada, ID_Constructor)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 4."))
+
 ```
 
 ```{r, echo=FALSE}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2014
 
-Retiro_Fallas_Parada_boxes_2014 <- "SELECT r.year AS Año,
-       r.name AS carrera,
-       d.forename || ' ' || d.driverRef AS Piloto,
-       COUNT(DISTINCT CASE WHEN s.status like '%Mechanical%' OR '%Electrical%' OR '%Engine misfire%' OR '%Engine fire%'  THEN res.resultId END) AS retiros_por_fallas_mecanicas,
-       COUNT(DISTINCT ps.stop) AS paradas_en_boxes
-FROM drivers d INNER JOIN results res ON d.driverId = res.driverId
+Retiro_Fallas_Parada_boxes_2014 <- "SELECT 
+    r.year AS Año, 
+    d.forename || ' ' || d.driverRef AS Piloto,
+    COUNT(DISTINCT CASE 
+        WHEN s.status LIKE '%Mechanical%' 
+          OR s.status LIKE '%Electrical%' 
+          OR s.status LIKE '%Engine misfire%' 
+          OR s.status LIKE '%Engine fire%' 
+        THEN res.resultId 
+    END) AS retiros_por_fallas_mecanicas,
+    SUM(ps.stop) AS total_paradas_en_boxes
+FROM drivers d
+INNER JOIN results res ON d.driverId = res.driverId
 INNER JOIN driver_standings e ON d.driverId = e.driverId
 INNER JOIN races r ON res.raceId = r.raceId
 LEFT JOIN status s ON res.statusId = s.statusId
 LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
-WHERE r.year == 2014 AND d.driverRef IN ('rosberg', 'hamilton', 'ricciardo', 'alonso', 'bottas')
-GROUP BY d.driverId, r.raceId
-ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
+WHERE r.year = 2014
+  AND d.driverRef IN ('rosberg', 'hamilton', 'ricciardo', 'alonso', 'bottas')
+GROUP BY d.driverId
+ORDER BY total_paradas_en_boxes DESC, retiros_por_fallas_mecanicas DESC;"
 
 Retiro_Fallas_Parada_boxes_2014 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2014)
+
+Retiro_Fallas_Parada_boxes_2014 %>% 
+  gt(rowname_col = "Parada en boxes") %>%
+  cols_label(retiros_por_fallas_mecanicas = "Retiro por fallas mecanicas",
+             total_paradas_en_boxes = "Parada en boxes"
+             ) %>%  
+  tab_header(title = "Parada en boxes",subtitle = "Temporada 2014") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año)) %>%
+    cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 5."))
 
 #Grafico de lineas ##
 
 grafico_paradas_boxes2014 <- ggplot(Retiro_Fallas_Parada_boxes_2014, aes(x = Piloto, y = total_paradas_en_boxes, group = 1)) +
-  geom_line(color = "darkgray", size = 1.2) +
+  geom_line(color = "darkgray", linewidth = 1.2) +
   geom_point(color = "darkgray", size = 3) + 
   labs(title = "Total Paradas en Boxes por Piloto",
        x = "Piloto",
@@ -595,7 +779,6 @@ grafico_paradas_boxes2014 <- ggplot(Retiro_Fallas_Parada_boxes_2014, aes(x = Pil
 
 
 print(grafico_paradas_boxes2014)
-
 
 ```
 
@@ -625,10 +808,24 @@ LIMIT 5;
 
 Mejores_2015 <- dbGetQuery(con, Mejores_en_2015)
 
-
-## Grafico de barras horizontal
-
-## Nueva columna llamada puntos_victorias
+Mejores_2015 %>% 
+  gt(rowname_col = "Piloto") %>%
+  tab_header(title = "Mejores pilotos",subtitle = "Temporada 2015") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año, Referencia)) %>%
+  cols_merge(
+    columns = c(Nombre, Apellido),
+    pattern = NULL)%>% 
+  cols_label(
+    Nombre = "Piloto")%>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 1."))
 
 Mejores_2015 <- Mejores_2015 %>% mutate(Puntos_Victorias = Puntos + Victorias)
 
@@ -639,11 +836,6 @@ Grafico_2015 <- ggplot(Mejores_2015, aes(x = reorder(paste(Nombre, Apellido), Pu
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
 
  print(Grafico_2015)
-
-
-
-
-
 ```
 
 ```{r, echo=FALSE}
@@ -665,6 +857,20 @@ ORDER BY Puntos DESC
 LIMIT 5;"
 
 Escuderias_2015 <- dbGetQuery(con, mejores_escuderias_2015)
+
+Escuderias_2015 %>% 
+  gt(rowname_col = "Escuderia") %>%
+  tab_header(title = "Mejores escuderias",subtitle = "Temporada 2015") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año, ID)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 2."))
 
 ## Grafico de barras horizontal
 
@@ -711,6 +917,30 @@ LIMIT 3;"
 
 Podios_Pilotos_2015 <- dbGetQuery(con, Podios_Pilotos_2015) 
 
+Podios_Pilotos_2015 %>% 
+  gt(rowname_col = "Podios pilotos") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total"
+             ) %>%  
+  tab_header(title = "Top 3 pilotos en podios",subtitle = "Temporada 2015") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ",") %>%
+  cols_hide(columns = c(temporada, ID_Pilotos)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  cols_merge(
+    columns = c(Nombre, Apellido),
+    pattern = NULL)%>% 
+  cols_label(
+    Nombre = "Piloto"
+  )  %>% 
+  tab_source_note(source_note = md("Tabla nro. 3."))
+
 ```
 
 ```{r, echo=FALSE}
@@ -737,32 +967,78 @@ ORDER BY Cantidad_Podios DESC
 LIMIT 3;"
 
 Podios_Constructor_2015 <- dbGetQuery(con, Podios_Constructor_2015)
+
+
+Podios_Constructor_2015 %>% 
+  gt(rowname_col = "Podios constructor") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total",
+             nacionalidad = "País"
+             ) %>%  
+  tab_header(title = "Top 3 podios de constructores",subtitle = "Temporada 2015") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(temporada, ID_Constructor)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 4."))
+
 ```
 
 ```{r, echo=FALSE}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2015 ##
 
-Retiro_Fallas_Parada_boxes_2015 <- "SELECT r.year AS Año,
-       r.name AS carrera,
-       d.forename || ' ' || d.driverRef AS Piloto,
-       COUNT(DISTINCT CASE WHEN s.status like '%Mechanical%' OR '%Electrical%' OR '%Engine misfire%' OR '%Engine fire%'  THEN res.resultId END) AS retiros_por_fallas_mecanicas,
-       COUNT(DISTINCT ps.stop) AS paradas_en_boxes
-FROM drivers d INNER JOIN results res ON d.driverId = res.driverId
+Retiro_Fallas_Parada_boxes_2015 <- "SELECT 
+    r.year AS Año, 
+    d.forename || ' ' || d.driverRef AS Piloto,
+    COUNT(DISTINCT CASE 
+        WHEN s.status LIKE '%Mechanical%' 
+          OR s.status LIKE '%Electrical%' 
+          OR s.status LIKE '%Engine misfire%' 
+          OR s.status LIKE '%Engine fire%' 
+        THEN res.resultId 
+    END) AS retiros_por_fallas_mecanicas,
+    SUM(ps.stop) AS total_paradas_en_boxes
+FROM drivers d
+INNER JOIN results res ON d.driverId = res.driverId
 INNER JOIN driver_standings e ON d.driverId = e.driverId
 INNER JOIN races r ON res.raceId = r.raceId
 LEFT JOIN status s ON res.statusId = s.statusId
 LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
-WHERE r.year == 2015 AND d.driverRef IN ('hamilton', 'rosberg', 'vettel', 'raikkonen', 'bottas')
-GROUP BY d.driverId, r.raceId
-ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
+WHERE r.year = 2015
+  AND d.driverRef IN ('hamilton', 'rosberg', 'vettel', 'raikkonen', 'bottas')
+GROUP BY d.driverId
+ORDER BY total_paradas_en_boxes DESC, retiros_por_fallas_mecanicas DESC;"
 
 Retiro_Fallas_Parada_boxes_2015 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2015)
 
+Retiro_Fallas_Parada_boxes_2015 %>% 
+  gt(rowname_col = "Parada en boxes") %>%
+  cols_label(retiros_por_fallas_mecanicas = "Retiro por fallas mecanicas",
+             total_paradas_en_boxes = "Parada en boxes"
+             ) %>%  
+  tab_header(title = "Parada en boxes",subtitle = "Temporada 2015") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año)) %>%
+    cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 5."))
 
 #Grafico de lineas ##
 
 grafico_paradas_boxes2015 <- ggplot(Retiro_Fallas_Parada_boxes_2015, aes(x = Piloto, y = total_paradas_en_boxes, group = 1)) +
-  geom_line(color = "red", size = 1.2) +
+  geom_line(color = "red", linewidth = 1.2) +
   geom_point(color = "red", size = 3) + 
   labs(title = "Total Paradas en Boxes por Piloto",
        x = "Piloto",
@@ -777,6 +1053,8 @@ print(grafico_paradas_boxes2015)
 ```
 
 ### Temporada 2016
+
+La temporada 2016 de la Fórmula 1 fue un año marcado por la intensa rivalidad entre los pilotos de Mercedes, Nico Rosberg y Lewis Hamilton, que culminó con la coronación de Rosberg como campeón del mundo. Esta temporada también fue testigo del dominio continuo de Mercedes en el campeonato de constructores, aunque equipos como Red Bull y Ferrari mostraron signos de progreso.
 
 ```{r, echo=FALSE}
 # Observar los mejores corredores del año 2016 en base a la suma de sus puntos y victorias
@@ -801,8 +1079,24 @@ LIMIT 5;
 "
 Mejores_2016 <- dbGetQuery(con, Mejores_en_2016)
 
-
-
+Mejores_2016 %>% 
+  gt(rowname_col = "Piloto") %>%
+  tab_header(title = "Mejores pilotos",subtitle = "Temporada 2016") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año, Referencia)) %>%
+  cols_merge(
+    columns = c(Nombre, Apellido),
+    pattern = NULL)%>% 
+  cols_label(
+    Nombre = "Piloto")%>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 1."))
 
 ## Grafico de barras horizontal
 
@@ -812,17 +1106,16 @@ Mejores_2016 <- Mejores_2016 %>% mutate(Puntos_Victorias = Puntos + Victorias)
 
 Grafico_2016 <- ggplot(Mejores_2016, aes(x = reorder(paste(Nombre, Apellido), Puntos_Victorias), y = Puntos_Victorias)) +
    geom_bar(fill = "orange", stat = "identity") +
-   labs(title = "Mejores Pilotos 2014",
+   labs(title = "Mejores Pilotos 2016",
         x = "Piloto",
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
 
  print(Grafico_2016)
 
 
-
-
-
 ```
+
+Rendimiento de los pilotos dentro de esta temporada: Nico Rosberg fue el piloto más destacado de la temporada, acumulando 4.195 puntos y logrando 9 victorias en 21 carreras. Este rendimiento le permitió ganar su primer y único campeonato mundial, antes de anunciar su retirada sorpresiva al final de la temporada. Lewis Hamilton terminó en segundo lugar con 3.890 puntos y 10 victorias. A pesar de tener más victorias que Rosberg, Hamilton no pudo superar a su compañero debido a problemas de fiabilidad y errores en carreras clave. Mercedes dominó la temporada, ganando el campeonato de constructores con 8.085 puntos y 19 victorias en 21 carreras. Este fue el tercer año consecutivo en el que Mercedes ganó ambos campeonatos, consolidándose como el equipo dominante de la era híbrida. Daniel Ricciardo (Red Bull) terminó tercero en el campeonato con 2.686 puntos y 1 victoria. Ricciardo demostró ser uno de los pilotos más consistentes de la temporada, logrando múltiples podios y aprovechando al máximo las oportunidades. Sebastian Vettel (Ferrari) terminó cuarto con 2.317 puntos y sin victorias. Aunque Ferrari mostró un progreso significativo respecto a temporadas anteriores, no pudo competir con Mercedes en términos de velocidad y fiabilidad. Kimi Räikkönen (Ferrari) terminó quinto con 2.249 puntos y sin victorias. Räikkönen tuvo una temporada sólida, pero no pudo igualar el rendimiento de Vettel.
 
 ```{r, echo=FALSE}
 ## Mejores escuderias en 2016 ##
@@ -843,6 +1136,23 @@ LIMIT 5;"
 
 Escuderias_2016 <- dbGetQuery(con, mejores_escuderias_2016)
 
+Escuderias_2016 %>% 
+  gt(rowname_col = "Escuderia") %>%
+  tab_header(title = "Mejores escuderias",subtitle = "Temporada 2016") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año, ID)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 2."))
+
+
+Escuderias_2016 <- dbGetQuery(con, mejores_escuderias_2016)
+
  Escuderias_2016 <- Escuderias_2016 %>% 
   mutate(Puntos_Victorias = Puntos + Victorias)
 
@@ -854,9 +1164,9 @@ Grafico_Escuderias_2016 <- ggplot(Escuderias_2016, aes(x = reorder(Escuderia, Pu
 
  print(Grafico_Escuderias_2016)
 
-
-
 ```
+
+Rendimiento de las escuderías: Mercedes dominó la temporada con 8.085 puntos y 19 victorias. Este fue el tercer año consecutivo en el que Mercedes ganó ambos campeonatos, consolidándose como el equipo dominante de la era híbrida. Red Bull terminó en segundo lugar con 4.842 puntos y 2 victorias. Red Bull demostró ser el equipo más cercano a Mercedes, logrando resultados consistentes a lo largo de la temporada. Ferrari terminó tercero con 4.566 puntos y sin victorias. Aunque Ferrari mostró un progreso significativo respecto a temporadas anteriores, no pudo competir con Mercedes en términos de velocidad y fiabilidad. Williams terminó cuarto con 1.898 puntos y sin victorias. Williams tuvo una temporada sólida, pero no pudo competir con los equipos de arriba. Force India terminó quinto con 1.665 puntos y sin victorias. Force India demostró ser un equipo consistente, logrando resultados sólidos a lo largo de la temporada.
 
 ```{r, echo=FALSE}
 ## 2016 ## 
@@ -886,6 +1196,30 @@ LIMIT 3;"
 
 Podios_Pilotos_2016 <- dbGetQuery(con, Podios_Pilotos_2016) 
 
+Podios_Pilotos_2016 %>% 
+  gt(rowname_col = "Podios pilotos") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total"
+             ) %>%  
+  tab_header(title = "Top 3 pilotos en podios",subtitle = "Temporada 2016") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ",") %>%
+  cols_hide(columns = c(temporada, ID_Pilotos)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  cols_merge(
+    columns = c(Nombre, Apellido),
+    pattern = NULL)%>% 
+  cols_label(
+    Nombre = "Piloto"
+  )  %>% 
+  tab_source_note(source_note = md("Tabla nro. 3."))
+
 ```
 
 ```{r, echo=FALSE}
@@ -912,6 +1246,28 @@ ORDER BY Cantidad_Podios DESC
 LIMIT 3;"
 
 Podios_Constructor_2016 <- dbGetQuery(con, Podios_Constructor_2016)
+
+
+Podios_Constructor_2016 %>% 
+  gt(rowname_col = "Podios constructor") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total",
+             nacionalidad = "País"
+             ) %>%  
+  tab_header(title = "Top 3 podios de constructores",subtitle = "Temporada 2016") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(temporada, ID_Constructor)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 4."))
+
 ```
 
 ```{r, echo=FALSE}
@@ -941,11 +1297,27 @@ ORDER BY total_paradas_en_boxes DESC, retiros_por_fallas_mecanicas DESC;"
 
 Retiro_Fallas_Parada_boxes_2016 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2016)
 
+Retiro_Fallas_Parada_boxes_2016 %>% 
+  gt(rowname_col = "Parada en boxes") %>%
+  cols_label(retiros_por_fallas_mecanicas = "Retiro por fallas mecanicas",
+             total_paradas_en_boxes = "Parada en boxes"
+             ) %>%  
+  tab_header(title = "Parada en boxes",subtitle = "Temporada 2016") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año)) %>%
+    cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 5."))
 
 #Grafico de lineas ##
 
 grafico_paradas_boxes2016 <- ggplot(Retiro_Fallas_Parada_boxes_2016, aes(x = Piloto, y = total_paradas_en_boxes, group = 1)) +
-  geom_line(color = "orange", size = 1.2) +
+  geom_line(color = "orange", linewidth = 1.2) +
   geom_point(color = "orange", size = 3) + 
   labs(title = "Total Paradas en Boxes por Piloto",
        x = "Piloto",
@@ -955,17 +1327,17 @@ grafico_paradas_boxes2016 <- ggplot(Retiro_Fallas_Parada_boxes_2016, aes(x = Pil
 
 
 print(grafico_paradas_boxes2016)
-
-
-
-
-
-
 ```
+Parada en boxes y estrategias: Kimi Räikkönen tuvo el mayor tiempo total en paradas en boxes (23.120 milisegundos), lo que sugiere que Ferrari priorizó la precisión y la seguridad sobre la velocidad en las paradas. A pesar de esto, Räikkönen logró terminar en el podio en varias ocasiones. Lewis Hamilton y Nico Rosberg tuvieron tiempos moderados en paradas en boxes (16.767 y 14.626 milisegundos, respectivamente), lo que refleja la eficiencia de Mercedes en esta área. Sebastian Vettel y Daniel Ricciardo tuvieron tiempos más bajos en paradas en boxes (14.058 y 13.932 milisegundos, respectivamente), lo que sugiere que Ferrari y Red Bull manejaron bien las paradas.
 
+Conclusión general para la temporada 2016
+
+La temporada 2016 fue un año de dominio continuo por parte de Mercedes, pero también estuvo marcada por la intensa rivalidad entre Nico Rosberg y Lewis Hamilton. Rosberg logró su primer y único campeonato mundial antes de anunciar su retirada sorpresiva, lo que añadió un giro dramático al final de la temporada. El rendimiento en las paradas en boxes y la adaptación a las estrategias de carrera fueron factores clave que influyeron en los resultados finales. Aunque Mercedes fue el equipo más eficiente en esta área, Ferrari y Red Bull demostraron que la consistencia y el rendimiento en pista también son cruciales para el éxito. En resumen, la temporada 2016 fue un año de consolidación para Mercedes, pero también sentó las bases para una rivalidad más intensa entre los equipos en los años siguientes. Fue una temporada que combinó velocidad, estrategia y emoción, dejando un legado importante en la historia de la Fórmula 1.
 
 
 ### Temporada 2017
+
+La temporada 2017 de la Fórmula 1 fue un año emocionante y competitivo, marcado por una intensa batalla entre Mercedes y Ferrari, así como por el regreso de la rivalidad entre Lewis Hamilton y Sebastián Vettel. Esta temporada también fue testigo de cambios significativos en la normativa técnica, con coches más anchos y neumáticos más grandes, lo que aumentó la velocidad y la agresividad de los monoplazas.
 
 ```{r, echo=FALSE}
 # Observar los mejores corredores del año 2017 en base a la suma de sus puntos y victorias
@@ -1017,7 +1389,7 @@ Mejores_2017 <- Mejores_2017 %>% mutate(Puntos_Victorias = Puntos + Victorias)
 
 Grafico_2017 <- ggplot(Mejores_2017, aes(x = reorder(paste(Nombre, Apellido), Puntos_Victorias), y = Puntos_Victorias)) +
    geom_bar(fill = "gold", stat = "identity") +
-   labs(title = "Mejores Pilotos 2014",
+   labs(title = "Mejores Pilotos 2017",
         x = "Piloto",
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
 
@@ -1025,13 +1397,46 @@ Grafico_2017 <- ggplot(Mejores_2017, aes(x = reorder(paste(Nombre, Apellido), Pu
 
 ```
 
+Rendimiento de los pilotos dentro de esta temporada: Lewis Hamilton fue el piloto más destacado de la temporada, acumulando 3.853 puntos y logrando 9 victorias en 20 carreras. Este rendimiento le permitió ganar su cuarto campeonato mundial, consolidándose como uno de los mejores pilotos de la historia de la Fórmula 1. Mercedes también dominó la temporada, ganando el campeonato de constructores con 6.928 puntos y 12 victorias. Aunque Ferrari les presionó en varias carreras, Mercedes demostró una vez más su superioridad en términos de fiabilidad y estrategia. Sebastian Vettel (Ferrari) terminó en segundo lugar en el campeonato con 3.644 puntos y 5 victorias. Vettel y Ferrari mostraron un rendimiento sólido durante la primera mitad de la temporada, pero problemas de fiabilidad y errores estratégicos en la segunda mitad les costaron el título. Ferrari terminó en segundo lugar en el campeonato de constructores con 5.749 puntos y 5 victorias. Aunque no pudo competir con Mercedes en términos de consistencia, Ferrari demostró que tenía el coche más rápido en varias carreras. Valtteri Bottas (Mercedes) terminó tercero en el campeonato con 3.075 puntos y 3 victorias. Bottas tuvo una temporada sólida, aunque no pudo igualar el rendimiento de su compañero Hamilton. Daniel Ricciardo (Red Bull) terminó cuarto con 2.236 puntos y 1 victoria. Ricciardo demostró su habilidad para aprovechar al máximo las oportunidades, logrando victorias y podios en carreras donde Red Bull no era el favorito. Kimi Räikkönen (Ferrari) terminó quinto con 2.105 puntos y sin victorias. Aunque Räikkönen mostró destellos de su antigua forma, no pudo igualar el rendimiento de Vettel.
+
+```{r, echo=FALSE}
+
+#### MEJORES ESCUDERIAS EN BASE SUS PUNTOS Y VICTORIAS DURANTE 2017 - 2013 ####
+
+### Mejores escuderias en 2017 ##
+
+mejores_escuderias_2017 <- "SELECT
+a.constructorId AS ID,
+a.name AS Escuderia,
+c.year AS Año,
+SUM(b.points) AS Puntos,
+sum(b.wins) AS Victorias
+FROM constructors a
+INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
+INNER JOIN races c ON c.raceId = b.raceId
+WHERE c.year = 2017
+GROUP BY a.constructorId
+ORDER BY Puntos DESC
+LIMIT 5;"
+
+Escuderias_2017 <- dbGetQuery(con, mejores_escuderias_2017)
 
 
-```{r}
-##Mejores escuderias 2017
+Escuderias_2017 %>% 
+  gt(rowname_col = "Escuderia") %>%
+  tab_header(title = "Mejores escuderias",subtitle = "Temporada 2017") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año, ID)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 2."))
 
-
- Escuderias_2017 <- Escuderias_2017 %>% 
+Escuderias_2017 <- Escuderias_2017 %>% 
   mutate(Puntos_Victorias = Puntos + Victorias)
 
 Grafico_Escuderias_2017 <- ggplot(Escuderias_2017, aes(x = reorder(Escuderia, Puntos_Victorias), y = Puntos_Victorias)) +
@@ -1044,8 +1449,109 @@ Grafico_Escuderias_2017 <- ggplot(Escuderias_2017, aes(x = reorder(Escuderia, Pu
 
 ```
 
+Rendimiento de las escuderías: Mercedes dominó la temporada con 6.928 puntos y 12 victorias. Aunque Ferrari les presionó en varias carreras, Mercedes demostró una vez más su superioridad en términos de fiabilidad y estrategia. Ferrari terminó en segundo lugar con 5.749 puntos y 5 victorias. Aunque no pudo competir con Mercedes en términos de consistencia, Ferrari demostró que tenía el coche más rápido en varias carreras. Red Bull terminó tercero con 3.674 puntos y 3 victorias. Red Bull tuvo una temporada sólida, pero no pudo competir con Mercedes y Ferrari en términos de velocidad y fiabilidad. Force India terminó cuarto con 1.924 puntos y sin victorias. Force India demostró ser el mejor de los equipos de mitad de tabla, logrando resultados consistentes a lo largo de la temporada. Williams terminó quinto con 868 puntos y sin victorias. Williams tuvo una temporada decepcionante, luchando por adaptarse a los cambios en la normativa técnica.
 
-```{r}
+```{r, echo=FALSE}
+## 2017 ##
+
+Podios_Pilotos_2017 <- "SELECT d.driverId AS ID_Pilotos,
+       d.forename AS Nombre,
+       d.surname AS Apellido,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       drivers d ON d.driverId = r.driverId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2017
+GROUP BY
+       d.driverId, 
+	   d.forename, d.surname
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_PILOTOS_2017 <- dbGetQuery(con, Podios_Pilotos_2017) 
+
+Podios_PILOTOS_2017 %>% 
+  gt(rowname_col = "Podios pilotos") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total"
+             ) %>%  
+  tab_header(title = "Top 3  pilotos en podios",subtitle = "Temporada 2017") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ",") %>%
+  cols_hide(columns = c(temporada, ID_Pilotos)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  cols_merge(
+    columns = c(Nombre, Apellido),
+    pattern = NULL)%>% 
+  cols_label(
+    Nombre = "Piloto"
+  )  %>% 
+  tab_source_note(source_note = md("Tabla nro. 3."))
+```
+
+```{r, echo=FALSE}
+Podios_Constructor_2017 <- "SELECT c.constructorId AS ID_Constructor,
+       c.name AS Nombre,
+       c.nationality AS nacionalidad,
+       s.year AS temporada,   
+       SUM(CASE WHEN r.position = 1 THEN 1 ELSE 0 END) AS Podios_1,
+       SUM(CASE WHEN r.position = 2 THEN 1 ELSE 0 END) AS Podios_2,
+       SUM(CASE WHEN r.position = 3 THEN 1 ELSE 0 END) AS Podios_3,
+       COUNT(r.position) AS Cantidad_Podios
+FROM  
+       results r 
+INNER JOIN 
+       constructors c ON c.constructorId = r.constructorId
+INNER JOIN 
+     races s ON s.raceId = r.raceId
+WHERE 
+       r.position IN (1, 2, 3) AND
+	   s.year = 2017
+GROUP BY
+       c.constructorId, c.name, c.nationality
+ORDER BY Cantidad_Podios DESC
+LIMIT 3;"
+
+Podios_Constructor_2017 <- dbGetQuery(con, Podios_Constructor_2017)
+
+
+Podios_Constructor_2017 %>% 
+  gt(rowname_col = "Podios constructor") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total",
+             nacionalidad = "País"
+             ) %>%  
+  tab_header(title = "Top 3 podios de constructores",subtitle = "Temporada 2017") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(temporada, ID_Constructor)) %>%
+  cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 4."))
+```
+
+```{r, echo=FALSE}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2017 ##
 
 Retiro_Fallas_Parada_boxes_2017 <- "SELECT 
@@ -1072,12 +1578,27 @@ ORDER BY total_paradas_en_boxes DESC, retiros_por_fallas_mecanicas DESC;"
 
 Retiro_Fallas_Parada_boxes_2017 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2017)
 
-
+Retiro_Fallas_Parada_boxes_2017 %>% 
+  gt(rowname_col = "Parada en boxes") %>%
+  cols_label(retiros_por_fallas_mecanicas = "Retiro por fallas mecanicas",
+             total_paradas_en_boxes = "Parada en boxes"
+             ) %>%  
+  tab_header(title = "Parada en boxes",subtitle = "Temporada 2017") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = ".",
+             dec_mark = ","
+             ) %>%
+  cols_hide(columns = c(Año)) %>%
+    cols_align(
+    align = "center",
+    columns = everything())%>%
+  tab_source_note(source_note = md("Tabla nro. 5."))
 
 #Grafico de lineas ##
 
 grafico_paradas_boxes2017 <- ggplot(Retiro_Fallas_Parada_boxes_2017, aes(x = Piloto, y = total_paradas_en_boxes, group = 1)) +
-  geom_line(color = "gold", size = 1.2) +
+  geom_line(color = "gold", linewidth = 1.2) +
   geom_point(color = "gold", size = 3) + 
   labs(title = "Total Paradas en Boxes por Piloto",
        x = "Piloto",
@@ -1089,6 +1610,31 @@ grafico_paradas_boxes2017 <- ggplot(Retiro_Fallas_Parada_boxes_2017, aes(x = Pil
 print(grafico_paradas_boxes2017)
 
 ```
+
+
+Parada en boxes y estrategias: Kimi Räikkönen tuvo el mayor tiempo total en paradas en boxes (15.504 milisegundos), lo que sugiere que Ferrari priorizó la precisión y la seguridad sobre la velocidad en las paradas. A pesar de esto, Räikkönen logró terminar en el podio en varias ocasiones. Lewis Hamilton y Sebastian Vettel tuvieron tiempos moderados en paradas en boxes (13.248 y 12.276 milisegundos, respectivamente), lo que refleja la eficiencia de Mercedes y Ferrari en esta área. Daniel Ricciardo y Valtteri Bottas tuvieron los tiempos más bajos en paradas en boxes (8.127 y 6.076 milisegundos, respectivamente), lo que sugiere que Red Bull y Mercedes manejaron muy bien las paradas. 
+
+Las paradas en boxes fueron un factor clave en la temporada 2017. Red Bull y Mercedes demostraron ser los más eficientes, mientras que Ferrari optó por estrategias más conservadoras. A pesar de los tiempos más largos en boxes, Räikkönen logró compensar con su rendimiento en pista.
+
+Conclusión general de la temporada 2017
+
+La temporada 2017 fue un año emocionante y competitivo, marcado por una intensa batalla entre Mercedes y Ferrari, así como por la rivalidad entre Lewis Hamilton y Sebastian Vettel. Aunque Mercedes y Hamilton terminaron dominando la temporada, Ferrari y Vettel demostraron que podían competir al más alto nivel, lo que prometía una rivalidad aún más intensa en los años siguientes. El rendimiento en las paradas en boxes y la adaptación a las estrategias de carrera fueron factores clave que influyeron en los resultados finales. Aunque Mercedes fue el equipo más eficiente en esta área, Ferrari y Red Bull demostraron que la consistencia y el rendimiento en pista también son cruciales para el éxito, En resumen, la temporada 2017 fue un año de consolidación para Mercedes y Hamilton, pero también sentó las bases para una rivalidad más intensa con Ferrari en los años siguientes. Fue una temporada que combinó velocidad, estrategia y emoción, dejando un legado importante en la historia de la Fórmula 1.
+
+
+## CAPÍTULO 5: CONCLUSIÓN
+
+El estudio "El quinteto de la excelencia: Un análisis sobre los pilotos y escuderías más destacados entre los años 2013-2017 de la Fórmula 1" ha permitido realizar un análisis exhaustivo y detallado del rendimiento de los mejores pilotos y equipos durante un período clave en la historia de este deporte. A través de un enfoque estadístico y metodológico riguroso, se han identificado los factores clave que influyeron en el éxito de los pilotos y escuderías, destacando la importancia de la tecnología, la estrategia y la habilidad humana en un deporte donde los márgenes de victoria son extremadamente estrechos.
+Los hallazgos de este estudio tienen implicaciones prácticas tanto para los equipos de Fórmula 1 como para los aficionados y analistas del deporte. Para los equipos, el análisis de variables como las paradas en boxes y la adaptación a cambios tecnológicos puede servir como guía para mejorar su rendimiento en futuras temporadas. Para los aficionados, el estudio ofrece una visión más clara y objetiva de los factores que influyen en el éxito en la Fórmula 1, lo que enriquece su comprensión y apreciación del deporte.
+
+En resumen, este estudio ha demostrado que el éxito en la Fórmula 1 es el resultado de una combinación compleja de factores, incluyendo la tecnología, la estrategia, la eficiencia operativa y el talento de los pilotos. El período 2013-2017, marcado por la transición a los motores híbridos, fue una era de cambios significativos que redefinió la competitividad en la categoría. A través de un análisis riguroso y basado en datos, este trabajo ha proporcionado una visión valiosa y objetiva del rendimiento en la Fórmula 1, sentando las bases para futuras investigaciones y contribuyendo al campo del análisis deportivo.
+
+
+## CAPÍTULO 6: BIBILOGRAFÍA
+
+- Formula 1. (s.f.). History. Recuperado de https://www.formula1.com/en/latest/article.history-of-formula-1.html
+- Motorsport.com (s.f.) Formula 1. Recuperado de: https://es.motorsport.com/f1/
+- Stewart, J. (2007). Winning is Not Enough. Headline Publishing Group.
+
 
 
 
