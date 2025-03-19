@@ -270,16 +270,14 @@ LIMIT 5;
 
 Mejores_2013 <- dbGetQuery(con, Mejores_en_2013)
 
-
 ## Grafico de barras horizontal
 
 ## Nueva columna llamada puntos_victorias
-
 Mejores_2013 <- Mejores_2013 %>% mutate(Puntos_Victorias = Puntos + Victorias)
 
-Grafico_2013 <- ggplot(Mejores_2013, aes(x = paste(Nombre, Apellido), y = Puntos_Victorias)) +
-   geom_bar(fill = "red", stat = "identity") +
-   labs(title = "Mejores corredores 2013",
+Grafico_2013 <- ggplot(Mejores_2013, aes(x = reorder(paste(Nombre, Apellido), Puntos_Victorias), y = Puntos_Victorias)) +
+   geom_bar(fill = "darkblue", stat = "identity") +
+   labs(title = "Mejores Pilotos 2013",
         x = "Piloto",
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
 
@@ -364,6 +362,20 @@ LIMIT 5;"
 
 Escuderias_2013 <- dbGetQuery(con, mejores_escuderias_2013)
 
+## Grafico de barras horizontal
+
+## Nueva columna llamada puntos_victorias
+
+ Escuderias_2013 <- Escuderias_2013 %>% 
+  mutate(Puntos_Victorias = Puntos + Victorias)
+
+Grafico_Escuderias_2013 <- ggplot(Escuderias_2013, aes(x = reorder(Escuderia, Puntos_Victorias), y = Puntos_Victorias)) +
+   geom_bar(fill = "darkblue", stat = "identity") +
+   labs(title = "Mejores Escuderias 2013",
+        x = "Constructor",
+        y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
+
+ print(Grafico_Escuderias_2013)
 
 ```
 
@@ -413,16 +425,14 @@ LIMIT 5;
 
 Mejores_2014 <- dbGetQuery(con, Mejores_en_2014)
 
-
 ## Grafico de barras horizontal
 
 ## Nueva columna llamada puntos_victorias
-
 Mejores_2014 <- Mejores_2014 %>% mutate(Puntos_Victorias = Puntos + Victorias)
 
-Grafico_2014 <- ggplot(Mejores_2014, aes(x = paste(Nombre, Apellido), y = Puntos_Victorias)) +
-   geom_bar(fill = "red", stat = "identity") +
-   labs(title = "Mejores corredores 2014",
+Grafico_2014 <- ggplot(Mejores_2014, aes(x = reorder(paste(Nombre, Apellido), Puntos_Victorias), y = Puntos_Victorias)) +
+   geom_bar(fill = "darkgray", stat = "identity") +
+   labs(title = "Mejores Pilotos 2014",
         x = "Piloto",
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
 
@@ -448,6 +458,24 @@ ORDER BY Puntos DESC
 LIMIT 5;"
 
 Escuderias_2014 <- dbGetQuery(con, mejores_escuderias_2014)
+
+
+## Grafico de barras horizontal
+
+## Nueva columna llamada puntos_victorias
+
+ Escuderias_2014 <- Escuderias_2014 %>% 
+  mutate(Puntos_Victorias = Puntos + Victorias)
+
+Grafico_Escuderias_2014 <- ggplot(Escuderias_2014, aes(x = reorder(Escuderia, Puntos_Victorias), y = Puntos_Victorias)) +
+   geom_bar(fill = "darkgray", stat = "identity") +
+   labs(title = "Mejores Escuderias 2014",
+        x = "Constructor",
+        y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
+
+ print(Grafico_Escuderias_2014)
+
+
 
 ```
 
@@ -560,14 +588,13 @@ Mejores_2015 <- dbGetQuery(con, Mejores_en_2015)
 
 Mejores_2015 <- Mejores_2015 %>% mutate(Puntos_Victorias = Puntos + Victorias)
 
-Grafico_2015 <- ggplot(Mejores_2015, aes(x = paste(Nombre, Apellido), y = Puntos_Victorias)) +
+Grafico_2015 <- ggplot(Mejores_2015, aes(x = reorder(paste(Nombre, Apellido), Puntos_Victorias), y = Puntos_Victorias)) +
    geom_bar(fill = "red", stat = "identity") +
    labs(title = "Mejores Pilotos 2015",
         x = "Piloto",
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
 
  print(Grafico_2015)
-
 
 
 
@@ -594,6 +621,22 @@ ORDER BY Puntos DESC
 LIMIT 5;"
 
 Escuderias_2015 <- dbGetQuery(con, mejores_escuderias_2015)
+
+## Grafico de barras horizontal
+
+## Nueva columna llamada puntos_victorias
+
+ Escuderias_2015 <- Escuderias_2015 %>% 
+  mutate(Puntos_Victorias = Puntos + Victorias)
+
+Grafico_Escuderias_2015 <- ggplot(Escuderias_2015, aes(x = reorder(Escuderia, Puntos_Victorias), y = Puntos_Victorias)) +
+   geom_bar(fill = "red", stat = "identity") +
+   labs(title = "Mejores Escuderias 2015",
+        x = "Escuderia",
+        y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
+
+ print(Grafico_Escuderias_2015)
+
 ```
 
 ```{r, echo=FALSE}
@@ -699,20 +742,20 @@ Mejores_2016 <- dbGetQuery(con, Mejores_en_2016)
 
 
 
+
 ## Grafico de barras horizontal
 
 ## Nueva columna llamada puntos_victorias
 
 Mejores_2016 <- Mejores_2016 %>% mutate(Puntos_Victorias = Puntos + Victorias)
 
-Grafico_2016 <- ggplot(Mejores_2016, aes(x = paste(Nombre, Apellido), y = Puntos_Victorias)) +
+Grafico_2016 <- ggplot(Mejores_2016, aes(x = reorder(paste(Nombre, Apellido), Puntos_Victorias), y = Puntos_Victorias)) +
    geom_bar(fill = "orange", stat = "identity") +
    labs(title = "Mejores Pilotos 2014",
         x = "Piloto",
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
 
  print(Grafico_2016)
-
 
 
 
@@ -738,6 +781,19 @@ ORDER BY Puntos DESC
 LIMIT 5;"
 
 Escuderias_2016 <- dbGetQuery(con, mejores_escuderias_2016)
+
+ Escuderias_2016 <- Escuderias_2016 %>% 
+  mutate(Puntos_Victorias = Puntos + Victorias)
+
+Grafico_Escuderias_2016 <- ggplot(Escuderias_2016, aes(x = reorder(Escuderia, Puntos_Victorias), y = Puntos_Victorias)) +
+   geom_bar(fill = "orange", stat = "identity") +
+   labs(title = "Mejores Escuderias 2016",
+        x = "Escuderias",
+        y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
+
+ print(Grafico_Escuderias_2016)
+
+
 
 ```
 
@@ -868,7 +924,7 @@ Mejores_2017 %>%
 Mejores_2017 <- Mejores_2017 %>% mutate(Puntos_Victorias = Puntos + Victorias)
 
 Grafico_2017 <- ggplot(Mejores_2017, aes(x = paste(Nombre, Apellido), y = Puntos_Victorias)) +
-   geom_bar(fill = "orange", stat = "identity") +
+   geom_bar(fill = "gold", stat = "identity") +
    labs(title = "Mejores Pilotos 2014",
         x = "Piloto",
         y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
@@ -879,6 +935,27 @@ Grafico_2017 <- ggplot(Mejores_2017, aes(x = paste(Nombre, Apellido), y = Puntos
 
 
 
+```{r}
+##Mejores escuderias 2017
+
+
+ Escuderias_2017 <- Escuderias_2017 %>% 
+  mutate(Puntos_Victorias = Puntos + Victorias)
+
+Grafico_Escuderias_2017 <- ggplot(Escuderias_2017, aes(x = reorder(Escuderia, Puntos_Victorias), y = Puntos_Victorias)) +
+   geom_bar(fill = "gold", stat = "identity") +
+   labs(title = "Mejores Escuderias 2017",
+        x = "Escuderias",
+        y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
+
+ print(Grafico_Escuderias_2017)
+
+
+
+
+
+
+```
 
 
 
