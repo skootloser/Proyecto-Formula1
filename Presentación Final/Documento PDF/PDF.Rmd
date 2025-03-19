@@ -236,6 +236,17 @@ Mejores_2017 <- dbGetQuery(con, Mejores_en_2017)
 
 
 ```{r}
+Grafico_2017 <- ggplot(Mejores_2017, aes(x = paste(Nombre, Apellido), y = TotalPuntos)) +
+   geom_bar(fill = "red", stat = "identity") +
+   labs(title = "Mejores corredores 2017",
+        x = "Piloto",
+        y = "Puntos Totales")
+ print(Grafico_20117)      
+
+```
+
+
+```{r}
 # Observar los mejores corredores del año 2016 en base a la suma de sus puntos y victorias
 
 Mejores_en_2016 <- "
