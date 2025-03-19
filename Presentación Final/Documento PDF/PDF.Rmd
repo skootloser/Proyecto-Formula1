@@ -552,6 +552,27 @@ LIMIT 5;
 "
 
 Mejores_2015 <- dbGetQuery(con, Mejores_en_2015)
+
+
+## Grafico de barras horizontal
+
+## Nueva columna llamada puntos_victorias
+
+Mejores_2015 <- Mejores_2015 %>% mutate(Puntos_Victorias = Puntos + Victorias)
+
+Grafico_2015 <- ggplot(Mejores_2015, aes(x = paste(Nombre, Apellido), y = Puntos_Victorias)) +
+   geom_bar(fill = "red", stat = "identity") +
+   labs(title = "Mejores Pilotos 2015",
+        x = "Piloto",
+        y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
+
+ print(Grafico_2015)
+
+
+
+
+
+
 ```
 
 ```{r, echo=FALSE}
@@ -675,6 +696,27 @@ ORDER BY Puntos DESC
 LIMIT 5;
 "
 Mejores_2016 <- dbGetQuery(con, Mejores_en_2016)
+
+
+
+## Grafico de barras horizontal
+
+## Nueva columna llamada puntos_victorias
+
+Mejores_2016 <- Mejores_2016 %>% mutate(Puntos_Victorias = Puntos + Victorias)
+
+Grafico_2016 <- ggplot(Mejores_2016, aes(x = paste(Nombre, Apellido), y = Puntos_Victorias)) +
+   geom_bar(fill = "orange", stat = "identity") +
+   labs(title = "Mejores Pilotos 2014",
+        x = "Piloto",
+        y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
+
+ print(Grafico_2016)
+
+
+
+
+
 
 ```
 
@@ -819,4 +861,42 @@ Mejores_2017 %>%
     columns = everything())%>%
   tab_source_note(source_note = md("Tabla nro. 1."))
 
+## Grafico de barras horizontal
+
+## Nueva columna llamada puntos_victorias
+
+Mejores_2017 <- Mejores_2017 %>% mutate(Puntos_Victorias = Puntos + Victorias)
+
+Grafico_2017 <- ggplot(Mejores_2017, aes(x = paste(Nombre, Apellido), y = Puntos_Victorias)) +
+   geom_bar(fill = "orange", stat = "identity") +
+   labs(title = "Mejores Pilotos 2014",
+        x = "Piloto",
+        y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
+
+ print(Grafico_2017)
+
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
