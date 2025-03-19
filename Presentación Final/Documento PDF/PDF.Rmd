@@ -270,7 +270,21 @@ LIMIT 5;
 
 Mejores_2013 <- dbGetQuery(con, Mejores_en_2013)
 
-#### DE ESTA FORMA OBTENEMOS EN TABLAS LOS 5 MEJORES CORREDORES DURANTE 2013 - 2017 ###
+
+## Grafico de barras horizontal
+
+## Nueva columna llamada puntos_victorias
+
+Mejores_2013 <- Mejores_2013 %>% mutate(Puntos_Victorias = Puntos + Victorias)
+
+Grafico_2013 <- ggplot(Mejores_2013, aes(x = paste(Nombre, Apellido), y = Puntos_Victorias)) +
+   geom_bar(fill = "red", stat = "identity") +
+   labs(title = "Mejores corredores 2013",
+        x = "Piloto",
+        y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
+
+ print(Grafico_2013)
+
 ```
 
 ```{r, echo=FALSE}
@@ -350,7 +364,7 @@ LIMIT 5;"
 
 Escuderias_2013 <- dbGetQuery(con, mejores_escuderias_2013)
 
-## DE ESTA FORMA OBTENEMOS LAS 5 MEJORES ESCUDERIAS DURANTE 2017 - 2013 ##
+
 ```
 
 ```{r, echo=FALSE}
@@ -398,6 +412,22 @@ LIMIT 5;
 "
 
 Mejores_2014 <- dbGetQuery(con, Mejores_en_2014)
+
+
+## Grafico de barras horizontal
+
+## Nueva columna llamada puntos_victorias
+
+Mejores_2014 <- Mejores_2014 %>% mutate(Puntos_Victorias = Puntos + Victorias)
+
+Grafico_2014 <- ggplot(Mejores_2014, aes(x = paste(Nombre, Apellido), y = Puntos_Victorias)) +
+   geom_bar(fill = "red", stat = "identity") +
+   labs(title = "Mejores corredores 2014",
+        x = "Piloto",
+        y = "Puntos y Victorias") + theme(panel.background = element_blank(),) + coord_flip()
+
+ print(Grafico_2014)
+
 ```
 
 ```{r, echo=FALSE}
