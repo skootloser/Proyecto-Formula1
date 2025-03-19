@@ -245,6 +245,8 @@ Datos El estudio se desarrolla en base a un archivo de registros de datos sobre 
 
 ### Temporada 2013
 
+La temporada 2013 de la Fórmula 1 fue dominada por Sebastian Vettel y Red Bull Racing, quienes consolidaron su supremacía tanto en el campeonato de pilotos como en el de constructores. Esta temporada estuvo marcada por la consistencia de Vettel, quien logró un impresionante número de victorias y podios, así como por el rendimiento sólido de otros pilotos y equipos que lucharon por mantenerse competitivos.
+
 ```{r, echo=FALSE}
 # Observar los mejores corredores del año 2013 en base a la suma de sus puntos y victorias
 
@@ -303,6 +305,8 @@ Grafico_2013 <- ggplot(Mejores_2013, aes(x = reorder(paste(Nombre, Apellido), Pu
 
  print(Grafico_2013)
 ```
+
+Rendimiento de los pilotos dentro de esta temporada: El piloto más destacado de la temporada 2013 de la Fórmula 1 fue, sin duda, Sebastian Vettel. Con 3.646 puntos, 13 victorias y 16 podios (13 primeros, 1 segundo y 2 terceros), Vettel no solo ganó su cuarto título mundial consecutivo, sino que también dominó la temporada de manera abrumadora. Fernando Alonso (Ferrari) también destacó con 2.541 puntos, 2 victorias y 9 podios (2 primeros, 5 segundos y 2 terceros), demostrando su habilidad para maximizar los resultados con un coche no siempre competitivo. Kimi Räikkönen (Lotus F1) completó una temporada sólida con 2.272 puntos, 1 victoria y 8 podios (1 primero, 6 segundos y 1 tercero), manteniéndose en la pelea por el tercer lugar. Lewis Hamilton (Mercedes) tuvo un año de adaptación, sumando 2.099 puntos, 1 victoria y 5 podios, mientras que Mark Webber (Red Bull) contribuyó con 1.892 puntos y 4 podios, aunque sin victorias. En general, Vettel y Red Bull dominaron la temporada, pero pilotos como Alonso y Räikkönen demostraron su talento y consistencia en un año marcado por la superioridad técnica del RB9.
 
 ```{r, echo=FALSE}
 ## NUMERO DE VECES EN QUE CADA PILOTO Y CONSTRUCTOR HA TERMINADO ENTRE LOS TRES PRIMEROS ENTRE EL 2013 Y 2017 ##
@@ -454,6 +458,8 @@ Grafico_Escuderias_2013 <- ggplot(Escuderias_2013, aes(x = reorder(Escuderia, Pu
  print(Grafico_Escuderias_2013)
 ```
 
+Rendimiento de las escuderías: Esta temporada estuvo dominada por Red Bull Racing, que se consolidó como la escudería más destacada al sumar 5.538 puntos, 13 victorias y 24 podios (13 primeros, 6 segundos y 5 terceros), asegurando el campeonato de constructores con comodidad gracias a un rendimiento excepcional. Ferrari ocupó el segundo lugar con 3.787 puntos, 2 victorias y 10 podios (2 primeros, 5 segundos y 3 terceros), demostrando un rendimiento sólido pero insuficiente para desafiar a Red Bull. Mercedes terminó tercero con 3.712 puntos, 3 victorias y 9 podios, mostrando un potencial prometedor, aunque la falta de consistencia los relegó a esta posición. Lotus F1 tuvo una temporada notable con 3.319 puntos, 1 victoria y 14 podios (1 primero, 7 segundos y 6 terceros), destacándose por su consistencia. Por último, McLaren tuvo un año decepcionante, sumando solo 1.072 puntos sin victorias ni podios, lo que reflejó sus dificultades para competir al más alto nivel. En resumen, Red Bull fue la escudería dominante, mientras que Ferrari, Mercedes y Lotus lucharon por mantenerse competitivos en una temporada marcada por la superioridad técnica del RB9.
+
 ```{r, echo=FALSE}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2013 ##
 
@@ -514,8 +520,17 @@ print(grafico_paradas_boxes)
 
 ```
 
+Parada en boxes y estrategias: Las paradas en boxes y las estrategias de carrera fueron aspectos clave que influyeron en el rendimiento de los equipos. Red Bull Racing demostró ser uno de los más eficientes en esta área, con tiempos totales en paradas de 15.840 segundos y 18.232 segundos para sus dos pilotos. Esta eficiencia les permitió maximizar su rendimiento en pista, contribuyendo a su dominio en la temporada con múltiples victorias y podios. Por otro lado, Ferrari registró tiempos más largos, con un total de 23.600 segundos en paradas para uno de sus pilotos, lo que pudo afectar su competitividad en algunas carreras, a pesar de su sólido desempeño general.
+
+Mercedes también mostró una buena eficiencia, con un tiempo total de 17.181 segundos en paradas para uno de sus pilotos, lo que les ayudó a mantenerse en la pelea por podios y victorias. Lotus F1, con un tiempo total de 15.232 segundos, demostró ser competitivo en esta área, lo que les permitió lograr varios podios y una victoria durante la temporada. En general, las paradas en boxes y las estrategias de carrera fueron factores determinantes, con Red Bull y Lotus destacándose por su eficiencia, mientras que Ferrari y otros equipos enfrentaron desafíos para optimizar esta parte de su operación. 
+
+Conclusión del año 2013
+La temporada 2013 de la Fórmula 1 estuvo dominada por Red Bull Racing y Sebastian Vettel, quienes consolidaron su hegemonía con un rendimiento abrumador en pista y una eficiencia estratégica destacada. Vettel logró su cuarto título consecutivo gracias a una racha impresionante de victorias y una consistencia impecable. Equipos como Ferrari y Lotus F1 mostraron un rendimiento sólido, aunque insuficiente para desafiar a Red Bull, mientras que Mercedes demostró potencial pero careció de consistencia. McLaren, por su parte, tuvo una temporada decepcionante, luchando por mantenerse competitivo. Las paradas en boxes y las estrategias de carrera fueron factores clave, destacando la importancia de la eficiencia operativa en un deporte donde los detalles marcan la diferencia.
+
 
 ### Temporada 2014
+
+La temporada 2014 de la Fórmula 1 fue un año de grandes cambios, marcado por la introducción de los motores híbridos V6 turbo, que reemplazaron a los motores V8 atmosféricos. Este cambio tecnológico tuvo un impacto significativo en el rendimiento de los equipos y pilotos, y consolidó a Mercedes como el equipo dominante de la era híbrida. A continuación, se presenta una interpretación detallada de los aspectos clave de la temporada 2014, basada en los datos proporcionados en el estudio.
 
 ```{r, echo=FALSE}
 # Observar los mejores corredores del año 2014 en base a la suma de sus puntos y victorias
@@ -574,6 +589,8 @@ Grafico_2014 <- ggplot(Mejores_2014, aes(x = reorder(paste(Nombre, Apellido), Pu
  print(Grafico_2014)
 ```
 
+Rendimiento de los pilotos dentro de esta temporada: Lewis Hamilton fue el piloto más destacado de la temporada, acumulando 3.389 puntos y logrando 11 victorias en 19 carreras. Este rendimiento le permitió ganar su segundo campeonato mundial, consolidándose como uno de los mejores pilotos de la historia de la Fórmula 1. Nico Rosberg terminó en segundo lugar con 3.441 puntos y 5 victorias. Aunque Rosberg mostró un rendimiento sólido, no pudo igualar la consistencia de Hamilton a lo largo de la temporada. Daniel Ricciardo (Red Bull) terminó tercero en el campeonato con 2.187 puntos y 3 victorias. Ricciardo fue una de las sorpresas de la temporada, demostrando un rendimiento excepcional y superando a su compañero, el tetracampeón mundial Sebastian Vettel. Fernando Alonso (Ferrari) terminó sexto con 1.776 puntos y sin victorias. A pesar de su habilidad, Alonso no pudo competir con los equipos de arriba debido a las limitaciones del coche de Ferrari.
+
 ```{r, echo=FALSE}
 ## Mejores escuderias en 2014 ##
 
@@ -620,6 +637,8 @@ Grafico_Escuderias_2014 <- ggplot(Escuderias_2014, aes(x = reorder(Escuderia, Pu
 
 
 ```
+
+Rendimiento de las escuderías: Mercedes dominó la temporada, ganando el campeonato de constructores con 6.830 puntos y 16 victorias en 19 carreras. Este fue el primer año de la era híbrida, y Mercedes demostró una superioridad abrumadora en términos de velocidad, fiabilidad y estrategia. Red Bull terminó en segundo lugar en el campeonato de constructores con 3.793 puntos y 3 victorias. Aunque Red Bull no pudo competir con Mercedes, demostró ser el equipo más cercano en términos de rendimiento. Ferrari terminó en cuarto lugar con 2.314 puntos y sin victorias. Ferrari tuvo una temporada difícil, luchando por adaptarse a los nuevos motores híbridos. Williams terminó en tercer lugar en el campeonato de constructores con 2.439 puntos y sin victorias. Williams demostró un progreso significativo respecto a temporadas anteriores, gracias en parte a la potencia del motor Mercedes. McLaren terminó en quinto lugar con 1.757 puntos y sin victorias. McLaren tuvo una temporada difícil, luchando por adaptarse a los nuevos motores Honda que se introducirían en 2015.
 
 ```{r, echo=FALSE}
 ## 2014 ##
@@ -782,7 +801,17 @@ print(grafico_paradas_boxes2014)
 
 ```
 
+Parada en boxes y estrategias: Fernando Alonso tuvo el mayor tiempo total en paradas en boxes (19.175 milisegundos), lo que sugiere que Ferrari priorizó la precisión y la seguridad sobre la velocidad en las paradas. A pesar de esto, Alonso logró terminar en el podio en varias ocasiones. Lewis Hamilton y Nico Rosberg (Mercedes) tuvieron tiempos más bajos en paradas en boxes (13.662 y 12.566 milisegundos, respectivamente), lo que refleja la eficiencia del equipo Mercedes en esta área. Daniel Ricciardo (Red Bull) y Valtteri Bottas (Williams) tuvieron los tiempos más bajos en paradas en boxes (9.030 y 6.272 milisegundos, respectivamente), lo que sugiere que Red Bull y Williams fueron muy eficientes en sus estrategias de paradas.
+
+Conclusion general para la temporada 2014
+La temporada 2014 fue un año de grandes cambios en la Fórmula 1, marcado por la introducción de los motores híbridos V6 turbo. Este cambio tecnológico consolidó a Mercedes como el equipo dominante de la era híbrida, mientras que otros equipos como Red Bull y Williams mostraron signos de progreso. La rivalidad entre Lewis Hamilton y Nico Rosberg fue el eje central de la temporada, con Hamilton emergiendo como campeón por segunda vez en su carrera. El rendimiento en las paradas en boxes y la adaptación a las estrategias de carrera fueron factores clave que influyeron en los resultados finales. En resumen, la temporada 2014 marcó el inicio de una nueva era en la Fórmula 1, con Mercedes liderando el camino y otros equipos luchando por adaptarse a los cambios tecnológicos. Fue una temporada que combinó velocidad, estrategia y emoción, dejando un legado importante en la historia de la Fórmula 1.
+
+
 ### Temporada 2015
+
+
+La temporada 2015 de la Fórmula 1 fue un año dominado por Mercedes y su duelo interno entre Lewis Hamilton y Nico Rosberg. Esta temporada consolidó a Mercedes como el equipo dominante de la era híbrida, mientras que otros equipos como Ferrari y Williams mostraron signos de progreso, aunque sin poder desafiar seriamente a Mercedes.
+
 
 ```{r, echo=FALSE}
 # Observar los mejores corredores del año 2015 en base a la suma de sus puntos y victorias
@@ -838,6 +867,8 @@ Grafico_2015 <- ggplot(Mejores_2015, aes(x = reorder(paste(Nombre, Apellido), Pu
  print(Grafico_2015)
 ```
 
+Rendimiento de los pilotos dentro de esta temporada: Lewis Hamilton fue el piloto más destacado de la temporada, acumulando 3.908 puntos y logrando 10 victorias en 19 carreras. Este rendimiento le permitió ganar su tercer campeonato mundial, consolidándose como uno de los mejores pilotos de la historia de la Fórmula 1. Nico Rosberg terminó en segundo lugar con 3.231 puntos y 6 victorias. Aunque Rosberg mostró un rendimiento sólido, no pudo igualar la consistencia de Hamilton a lo largo de la temporada. Mercedes dominó la temporada, ganando el campeonato de constructores con 7.139 puntos y 16 victorias en 19 carreras. Este fue el segundo año consecutivo en el que Mercedes ganó ambos campeonatos, consolidándose como el equipo dominante de la era híbrida. Sebastian Vettel (Ferrari) terminó tercero en el campeonato con 2.917 puntos y 3 victorias. Vettel demostró un rendimiento sólido en su primera temporada con Ferrari, logrando victorias en Malasia, Hungría y Singapur. Kimi Räikkönen (Ferrari) terminó cuarto con 1.540 puntos y sin victorias. Aunque Räikkönen mostró destellos de su antigua forma, no pudo igualar el rendimiento de Vettel. Ferrari terminó en segundo lugar en el campeonato de constructores con 4.457 puntos y 3 victorias. Aunque Ferrari mostró un progreso significativo respecto a temporadas anteriores, no pudo competir con Mercedes en términos de velocidad y fiabilidad. 
+
 ```{r, echo=FALSE}
 
 ## Mejores escuderias en 2015 ##
@@ -888,6 +919,8 @@ Grafico_Escuderias_2015 <- ggplot(Escuderias_2015, aes(x = reorder(Escuderia, Pu
  print(Grafico_Escuderias_2015)
 
 ```
+
+Rendimiento de las escuderías: Williams terminó en tercer lugar en el campeonato de constructores con 2.796 puntos y sin victorias. Williams demostró ser un equipo consistente, pero no pudo competir con Mercedes y Ferrari en términos de velocidad. Red Bull terminó en cuarto lugar con 1.740 puntos y sin victorias. Red Bull tuvo una temporada difícil, luchando por adaptarse a los motores Renault, que no estaban a la altura de los motores Mercedes.
 
 ```{r, echo=FALSE}
 ## 2015 ## 
@@ -1051,6 +1084,12 @@ print(grafico_paradas_boxes2015)
 
 
 ```
+Parada en boxes y estrategias: Kimi Räikkönen tuvo el mayor tiempo total en paradas en boxes (17.136 milisegundos), lo que sugiere que Ferrari priorizó la precisión y la seguridad sobre la velocidad en las paradas. A pesar de esto, Räikkönen logró terminar en el podio en varias ocasiones. Lewis Hamilton y Nico Rosberg (Mercedes) tuvieron tiempos moderados en paradas en boxes (14.904 y 12.772 milisegundos, respectivamente), lo que refleja la eficiencia del equipo Mercedes en esta área. Sebastian Vettel (Ferrari) y Valtteri Bottas (Williams) tuvieron tiempos más bajos en paradas en boxes, lo que sugiere que sus equipos manejaron bien las paradas.
+
+Conclusion general para la temporada 2015
+
+La temporada 2015 fue un año de dominio continuo por parte de Mercedes, pero también estuvo marcada por el progreso de Ferrari y la consistencia de Williams. La rivalidad entre Lewis Hamilton y Nico Rosberg fue el eje central de la temporada, con Hamilton emergiendo como campeón por tercera vez en su carrera. El rendimiento en las paradas en boxes y la adaptación a las estrategias de carrera fueron factores clave que influyeron en los resultados finales. Aunque Mercedes fue el equipo más eficiente en esta área, Ferrari y Williams también demostraron que la consistencia y el rendimiento en pista son cruciales para el éxito. En resumen, la temporada 2015 consolidó a Mercedes como el equipo dominante de la era híbrida, pero también mostró signos de progreso por parte de Ferrari y Williams. Fue una temporada que combinó velocidad, estrategia y emoción, dejando un legado importante en la historia de la Fórmula 1.
+
 
 ### Temporada 2016
 
