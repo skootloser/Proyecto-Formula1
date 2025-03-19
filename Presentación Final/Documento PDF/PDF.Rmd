@@ -923,7 +923,7 @@ Mejores_2017 %>%
 
 Mejores_2017 <- Mejores_2017 %>% mutate(Puntos_Victorias = Puntos + Victorias)
 
-Grafico_2017 <- ggplot(Mejores_2017, aes(x = paste(Nombre, Apellido), y = Puntos_Victorias)) +
+Grafico_2017 <- ggplot(Mejores_2017, aes(x = reorder(paste(Nombre, Apellido), Puntos_Victorias), y = Puntos_Victorias)) +
    geom_bar(fill = "gold", stat = "identity") +
    labs(title = "Mejores Pilotos 2014",
         x = "Piloto",
