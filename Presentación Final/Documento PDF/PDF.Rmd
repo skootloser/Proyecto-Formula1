@@ -32,6 +32,7 @@ library(RSQLite)
 library(DBI)
 library(writexl)
 library(tinytex)
+library(DT)
 
 # Conexión con data SQLite
 
@@ -397,6 +398,33 @@ GROUP BY d.driverId, r.raceId
 ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
 
 Retiro_Fallas_Parada_boxes_2013 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2013)
+
+#Grafico de lineas ##
+
+grafico_paradas_boxes <- ggplot(Retiro_Fallas_Parada_boxes_2013, aes(x = Piloto, y = total_paradas_en_boxes, group = 1)) +
+  geom_line(color = "darkblue", size = 1.2) +
+  geom_point(color = "darkblue", size = 3) + 
+  labs(title = "Total Paradas en Boxes por Piloto",
+       x = "Piloto",
+       y = "Total Paradas en Boxes") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(panel.background = element_blank(),)
+
+
+print(grafico_paradas_boxes)
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```
 
 ### Temporada 2014
@@ -553,6 +581,22 @@ GROUP BY d.driverId, r.raceId
 ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
 
 Retiro_Fallas_Parada_boxes_2014 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2014)
+
+#Grafico de lineas ##
+
+grafico_paradas_boxes2014 <- ggplot(Retiro_Fallas_Parada_boxes_2014, aes(x = Piloto, y = total_paradas_en_boxes, group = 1)) +
+  geom_line(color = "darkgray", size = 1.2) +
+  geom_point(color = "darkgray", size = 3) + 
+  labs(title = "Total Paradas en Boxes por Piloto",
+       x = "Piloto",
+       y = "Total Paradas en Boxes") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(panel.background = element_blank()) 
+
+
+print(grafico_paradas_boxes2014)
+
+
 ```
 
 ### Temporada 2015
@@ -713,6 +757,23 @@ GROUP BY d.driverId, r.raceId
 ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
 
 Retiro_Fallas_Parada_boxes_2015 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2015)
+
+
+#Grafico de lineas ##
+
+grafico_paradas_boxes2015 <- ggplot(Retiro_Fallas_Parada_boxes_2015, aes(x = Piloto, y = total_paradas_en_boxes, group = 1)) +
+  geom_line(color = "red", size = 1.2) +
+  geom_point(color = "red", size = 3) + 
+  labs(title = "Total Paradas en Boxes por Piloto",
+       x = "Piloto",
+       y = "Total Paradas en Boxes") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(panel.background = element_blank()) 
+
+
+print(grafico_paradas_boxes2015)
+
+
 ```
 
 ### Temporada 2016
@@ -856,22 +917,53 @@ Podios_Constructor_2016 <- dbGetQuery(con, Podios_Constructor_2016)
 ```{r, echo=FALSE}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2016 ##
 
-Retiro_Fallas_Parada_boxes_2016 <- "SELECT r.year AS Año,
-       r.name AS carrera,
-       d.forename || ' ' || d.driverRef AS Piloto,
-       COUNT(DISTINCT CASE WHEN s.status like '%Mechanical%' OR '%Electrical%' OR '%Engine misfire%' OR '%Engine fire%'  THEN res.resultId END) AS retiros_por_fallas_mecanicas,
-       COUNT(DISTINCT ps.stop) AS paradas_en_boxes
-FROM drivers d INNER JOIN results res ON d.driverId = res.driverId
+Retiro_Fallas_Parada_boxes_2016 <- "SELECT 
+    r.year AS Año, 
+    d.forename || ' ' || d.driverRef AS Piloto,
+    COUNT(DISTINCT CASE 
+        WHEN s.status LIKE '%Mechanical%' 
+          OR s.status LIKE '%Electrical%' 
+          OR s.status LIKE '%Engine misfire%' 
+          OR s.status LIKE '%Engine fire%' 
+        THEN res.resultId 
+    END) AS retiros_por_fallas_mecanicas,
+    SUM(ps.stop) AS total_paradas_en_boxes
+FROM drivers d
+INNER JOIN results res ON d.driverId = res.driverId
 INNER JOIN driver_standings e ON d.driverId = e.driverId
 INNER JOIN races r ON res.raceId = r.raceId
 LEFT JOIN status s ON res.statusId = s.statusId
 LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
-WHERE r.year == 2016 AND d.driverRef IN ('rosberg', 'hamilton', 'ricciardo', 'vettel', 'raikkonen')
-GROUP BY d.driverId, r.raceId
-ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
+WHERE r.year = 2016
+  AND d.driverRef IN ('rosberg', 'hamilton', 'ricciardo', 'vettel', 'raikkonen')
+GROUP BY d.driverId
+ORDER BY total_paradas_en_boxes DESC, retiros_por_fallas_mecanicas DESC;"
 
 Retiro_Fallas_Parada_boxes_2016 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2016)
+
+
+#Grafico de lineas ##
+
+grafico_paradas_boxes2016 <- ggplot(Retiro_Fallas_Parada_boxes_2016, aes(x = Piloto, y = total_paradas_en_boxes, group = 1)) +
+  geom_line(color = "orange", size = 1.2) +
+  geom_point(color = "orange", size = 3) + 
+  labs(title = "Total Paradas en Boxes por Piloto",
+       x = "Piloto",
+       y = "Total Paradas en Boxes") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(panel.background = element_blank()) 
+
+
+print(grafico_paradas_boxes2016)
+
+
+
+
+
+
 ```
+
+
 
 ### Temporada 2017
 
@@ -950,15 +1042,53 @@ Grafico_Escuderias_2017 <- ggplot(Escuderias_2017, aes(x = reorder(Escuderia, Pu
 
  print(Grafico_Escuderias_2017)
 
-
-
-
-
-
 ```
 
 
+```{r}
+## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2017 ##
 
+Retiro_Fallas_Parada_boxes_2017 <- "SELECT 
+    r.year AS Año, 
+    d.forename || ' ' || d.driverRef AS Piloto,
+    COUNT(DISTINCT CASE 
+        WHEN s.status LIKE '%Mechanical%' 
+          OR s.status LIKE '%Electrical%' 
+          OR s.status LIKE '%Engine misfire%' 
+          OR s.status LIKE '%Engine fire%' 
+        THEN res.resultId 
+    END) AS retiros_por_fallas_mecanicas,
+    SUM(ps.stop) AS total_paradas_en_boxes
+FROM drivers d
+INNER JOIN results res ON d.driverId = res.driverId
+INNER JOIN driver_standings e ON d.driverId = e.driverId
+INNER JOIN races r ON res.raceId = r.raceId
+LEFT JOIN status s ON res.statusId = s.statusId
+LEFT JOIN pitstops ps ON d.driverId = ps.driverId AND r.raceId = ps.raceId
+WHERE r.year = 2017 
+  AND d.driverRef IN ('hamilton', 'vettel', 'bottas', 'ricciardo', 'raikkonen')
+GROUP BY d.driverId
+ORDER BY total_paradas_en_boxes DESC, retiros_por_fallas_mecanicas DESC;"
+
+Retiro_Fallas_Parada_boxes_2017 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2017)
+
+
+
+#Grafico de lineas ##
+
+grafico_paradas_boxes2017 <- ggplot(Retiro_Fallas_Parada_boxes_2017, aes(x = Piloto, y = total_paradas_en_boxes, group = 1)) +
+  geom_line(color = "gold", size = 1.2) +
+  geom_point(color = "gold", size = 3) + 
+  labs(title = "Total Paradas en Boxes por Piloto",
+       x = "Piloto",
+       y = "Total Paradas en Boxes") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(panel.background = element_blank()) 
+
+
+print(grafico_paradas_boxes2017)
+
+```
 
 
 
