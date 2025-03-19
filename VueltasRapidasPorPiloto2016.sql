@@ -1,8 +1,8 @@
 /*
-"Medir el número de vueltas más rápidas registrada por cada piloto en 2014"
+"Medir el número de vueltas más rápidas registrada por cada piloto en 2016"
 
 Esta vista cuenta el número de veces que cada piloto ha registrado
-la vuelta más rápida en una carrera durante el año 2014.
+la vuelta más rápida en una carrera durante el año 2016.
 
 Tablas utilizadas:
 - laptimes: Contiene los tiempos de cada vuelta
@@ -11,10 +11,10 @@ Tablas utilizadas:
 */
 
 -- Primero eliminamos la vista si ya existe
-DROP VIEW IF EXISTS "main"."VueltasRapidasPorPiloto2014";
+DROP VIEW IF EXISTS "main"."VueltasRapidasPorPiloto2016";
 
--- Creamos la vista para contar las vueltas más rápidas por piloto en 2014
-CREATE VIEW VueltasRapidasPorPiloto2014 AS
+-- Creamos la vista para contar las vueltas más rápidas por piloto en 2016
+CREATE VIEW VueltasRapidasPorPiloto2016 AS
 WITH VueltasRapidasPorCarrera AS (
     -- Subconsulta para identificar la vuelta más rápida de cada carrera
     SELECT 
@@ -26,7 +26,7 @@ WITH VueltasRapidasPorCarrera AS (
     JOIN
         races r ON l.raceId = r.raceId
     WHERE
-        r.year = 2014
+        r.year = 2016
     GROUP BY 
         l.raceId
 )
@@ -48,4 +48,4 @@ ORDER BY
     total_vueltas_rapidas DESC
 LIMIT 5;
 
--- Para consultar el resultado: SELECT * FROM VueltasRapidasPorPiloto2014;
+-- Para consultar el resultado: SELECT * FROM VueltasRapidasPorPiloto2016;
