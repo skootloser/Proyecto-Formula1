@@ -48,16 +48,6 @@ DfCircutitos <- dbGetQuery(con, circuitos)
 
 DfCircuitos <- dbReadTable(con, "circuits")
 
-#Salida de archivo excel para toda la base de datos
-
-lista_de_datos <- list()
-for (tabla in tablas) {
-  datos <- dbReadTable(con, tabla)
-  lista_de_datos[[tabla]] <- datos
-}
-write_xlsx(lista_de_datos, "Formula1.xlsx")
-
-
 ```
 
 
@@ -209,8 +199,7 @@ El estudio se desarrolla en base a un archivo de registros de datos sobre las te
 
 
 
-
-```{r}
+```{r, echo=FALSE}
 # Observar los mejores corredores del año 2017 en base a la suma de sus puntos y victorias
 
 Mejores_en_2017 <- "
@@ -220,22 +209,39 @@ SELECT
     a.surname Apellido,
     a.number AS Número,
     d.year AS Año,
-    SUM(b.points) AS TotalPuntos,
-    sum(b.wins) AS TotalVictorias
+    SUM(b.points) AS Puntos,
+    sum(b.wins) AS Victorias
 FROM drivers a
 INNER JOIN driver_standings b ON a.driverId = b.driverId
 INNER JOIN races c ON b.raceId = c.raceId
 INNER JOIN seasons d ON c.year = d.year
 WHERE d.year = 2017
 GROUP BY a.driverId
-ORDER BY TotalPuntos DESC
+ORDER BY Puntos DESC
 LIMIT 5;
 "
 Mejores_2017 <- dbGetQuery(con, Mejores_en_2017)
+
+Mejores_2017 %>% 
+  gt(rowname_col = "Piloto") %>%
+  tab_header(title = "Mejores pilotos",subtitle = "Temporada 2017") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = "."
+             ) %>%
+  cols_hide(columns = c(Año, Referencia)) %>%
+  cols_merge(
+    columns = c(Nombre, Apellido),
+    pattern = NULL
+  )%>%
+  tab_source_note(source_note = md("Tabla nro. 1."))
+
 ```
 
 
-```{r}
+
+
+```{r, echo=FALSE}
 # Observar los mejores corredores del año 2016 en base a la suma de sus puntos y victorias
 
 Mejores_en_2016 <- "
@@ -245,22 +251,22 @@ SELECT
     a.surname Apellido,
     a.number AS Número,
     d.year AS Año,
-    SUM(b.points) AS TotalPuntos,
-    sum(b.wins) AS TotalVictorias
+    SUM(b.points) AS Puntos,
+    sum(b.wins) AS Victorias
 FROM drivers a
 INNER JOIN driver_standings b ON a.driverId = b.driverId
 INNER JOIN races c ON b.raceId = c.raceId
 INNER JOIN seasons d ON c.year = d.year
 WHERE d.year = 2016
 GROUP BY a.driverId
-ORDER BY TotalPuntos DESC
+ORDER BY Puntos DESC
 LIMIT 5;
 "
 Mejores_2016 <- dbGetQuery(con, Mejores_en_2016)
 
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Observar los mejores corredores del año 2015 en base a la suma de sus puntos y victorias
 
 Mejores_en_2015 <- "
@@ -270,22 +276,22 @@ SELECT
     a.surname Apellido,
     a.number AS Número,
     d.year AS Año,
-    SUM(b.points) AS TotalPuntos,
-    sum(b.wins) AS TotalVictorias
+    SUM(b.points) AS Puntos,
+    sum(b.wins) AS Victorias
 FROM drivers a
 INNER JOIN driver_standings b ON a.driverId = b.driverId
 INNER JOIN races c ON b.raceId = c.raceId
 INNER JOIN seasons d ON c.year = d.year
 WHERE d.year = 2015
 GROUP BY a.driverId
-ORDER BY TotalPuntos DESC
+ORDER BY Puntos DESC
 LIMIT 5;
 "
 
 Mejores_2015 <- dbGetQuery(con, Mejores_en_2015)
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Observar los mejores corredores del año 2014 en base a la suma de sus puntos y victorias
 
 Mejores_en_2014 <- "
@@ -295,22 +301,22 @@ SELECT
     a.surname Apellido,
     a.number AS Número,
     d.year AS Año,
-    SUM(b.points) AS TotalPuntos,
-    sum(b.wins) AS TotalVictorias
+    SUM(b.points) AS Puntos,
+    sum(b.wins) AS Victorias
 FROM drivers a
 INNER JOIN driver_standings b ON a.driverId = b.driverId
 INNER JOIN races c ON b.raceId = c.raceId
 INNER JOIN seasons d ON c.year = d.year
 WHERE d.year = 2014
 GROUP BY a.driverId
-ORDER BY TotalPuntos DESC
+ORDER BY Puntos DESC
 LIMIT 5;
 "
 
 Mejores_2014 <- dbGetQuery(con, Mejores_en_2014)
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Observar los mejores corredores del año 2013 en base a la suma de sus puntos y victorias
 
 Mejores_en_2013 <- "
@@ -320,15 +326,15 @@ SELECT
     a.surname Apellido,
     a.number AS Número,
     d.year AS Año,
-    SUM(b.points) AS TotalPuntos,
-    sum(b.wins) AS TotalVictorias
+    SUM(b.points) AS Puntos,
+    sum(b.wins) AS Victorias
 FROM drivers a
 INNER JOIN driver_standings b ON a.driverId = b.driverId
 INNER JOIN races c ON b.raceId = c.raceId
 INNER JOIN seasons d ON c.year = d.year
 WHERE d.year = 2013
 GROUP BY a.driverId
-ORDER BY TotalPuntos DESC
+ORDER BY Puntos DESC
 LIMIT 5;
 "
 
@@ -337,7 +343,7 @@ Mejores_2013 <- dbGetQuery(con, Mejores_en_2013)
 #### DE ESTA FORMA OBTENEMOS EN TABLAS LOS 5 MEJORES CORREDORES DURANTE 2013 - 2017 ###
 ```
 
-```{r}
+```{r, echo=FALSE}
 
 #### MEJORES ESCUDERIAS EN BASE SUS PUNTOS Y VICTORIAS DURANTE 2017 - 2013 ####
 
@@ -347,42 +353,53 @@ mejores_escuderias_2017 <- "SELECT
 a.constructorId AS ID,
 a.name AS Escuderia,
 c.year AS Año,
-SUM(b.points) AS TotalPuntos,
-sum(b.wins) AS TotalVictorias
+SUM(b.points) AS Puntos,
+sum(b.wins) AS Victorias
 FROM constructors a
 INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
 INNER JOIN races c ON c.raceId = b.raceId
 WHERE c.year = 2017
 GROUP BY a.constructorId
-ORDER BY TotalPuntos DESC
+ORDER BY Puntos DESC
 LIMIT 5;"
 
 Escuderias_2017 <- dbGetQuery(con, mejores_escuderias_2017)
 
+
+Escuderias_2017 %>% 
+  gt(rowname_col = "Escuderia") %>%
+  tab_header(title = "Mejores escuderias",subtitle = "Temporada 2017") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = "."
+             ) %>%
+  cols_hide(columns = c(Año, ID)) %>%
+  tab_source_note(source_note = md("Tabla nro. 2."))
+
 ```
 
-```{r}
+```{r, echo=FALSE}
 ## Mejores escuderias en 2016 ##
 
 mejores_escuderias_2016 <- "SELECT
 a.constructorId AS ID,
 a.name AS Escuderia,
 c.year AS Año,
-SUM(b.points) AS TotalPuntos,
-sum(b.wins) AS TotalVictorias
+SUM(b.points) AS Puntos,
+sum(b.wins) AS Victorias
 FROM constructors a
 INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
 INNER JOIN races c ON c.raceId = b.raceId
 WHERE c.year = 2016
 GROUP BY a.constructorId
-ORDER BY TotalPuntos DESC
+ORDER BY Puntos DESC
 LIMIT 5;"
 
 Escuderias_2016 <- dbGetQuery(con, mejores_escuderias_2016)
 
 ```
 
-```{r}
+```{r, echo=FALSE}
 
 ## Mejores escuderias en 2015 ##
 
@@ -390,55 +407,55 @@ mejores_escuderias_2015 <- "SELECT
 a.constructorId AS ID,
 a.name AS Escuderia,
 c.year AS Año,
-SUM(b.points) AS TotalPuntos,
-sum(b.wins) AS TotalVictorias
+SUM(b.points) AS Puntos,
+sum(b.wins) AS Victorias
 FROM constructors a
 INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
 INNER JOIN races c ON c.raceId = b.raceId
 WHERE c.year = 2015
 GROUP BY a.constructorId
-ORDER BY TotalPuntos DESC
+ORDER BY Puntos DESC
 LIMIT 5;"
 
 Escuderias_2015 <- dbGetQuery(con, mejores_escuderias_2015)
 ```
 
-```{r}
+```{r, echo=FALSE}
 ## Mejores escuderias en 2014 ##
 
 mejores_escuderias_2014 <- "SELECT
 a.constructorId AS ID,
 a.name AS Escuderia,
 c.year AS Año,
-SUM(b.points) AS TotalPuntos,
-sum(b.wins) AS TotalVictorias
+SUM(b.points) AS Puntos,
+sum(b.wins) AS Victorias
 FROM constructors a
 INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
 INNER JOIN races c ON c.raceId = b.raceId
 WHERE c.year = 2014
 GROUP BY a.constructorId
-ORDER BY TotalPuntos DESC
+ORDER BY Puntos DESC
 LIMIT 5;"
 
 Escuderias_2014 <- dbGetQuery(con, mejores_escuderias_2014)
 
 ```
 
-```{r}
+```{r, echo=FALSE}
 ## Mejores escuderias en 2013 ##
 
 mejores_escuderias_2013 <- "SELECT
 a.constructorId AS ID,
 a.name AS Escuderia,
 c.year AS Año,
-SUM(b.points) AS TotalPuntos,
-sum(b.wins) AS TotalVictorias
+SUM(b.points) AS Puntos,
+sum(b.wins) AS Victorias
 FROM constructors a
 INNER JOIN constructor_standings b ON a.constructorId = b.constructorId
 INNER JOIN races c ON c.raceId = b.raceId
 WHERE c.year = 2013
 GROUP BY a.constructorId
-ORDER BY TotalPuntos DESC
+ORDER BY Puntos DESC
 LIMIT 5;"
 
 Escuderias_2013 <- dbGetQuery(con, mejores_escuderias_2013)
@@ -451,7 +468,7 @@ Escuderias_2013 <- dbGetQuery(con, mejores_escuderias_2013)
 
 
 
-```{r}
+```{r, echo=FALSE}
 ## NUMERO DE VECES EN QUE CADA PILOTO Y CONSTRUCTOR HA TERMINADO ENTRE LOS TRES PRIMEROS ENTRE EL 2013 Y 2017 ##
 
 ## 2013 ##
@@ -482,7 +499,7 @@ LIMIT 3;"
 Podios_Pilotos_2013 <- dbGetQuery(con, Podios_Pilotos_2013) 
 ```
 
-```{r}
+```{r, echo=FALSE}
 Podios_Constructor_2013 <- "SELECT c.constructorId AS ID_Constructor,
        c.name AS Nombre,
        c.nationality AS nacionalidad,
@@ -511,7 +528,7 @@ Podios_Constructor_2013 <- dbGetQuery(con, Podios_Constructor_2013)
 
 ## Graffico de sectores  ##
 
-```{r}
+```{r, echo=FALSE}
 
 
 
@@ -521,7 +538,7 @@ Podios_Constructor_2013 <- dbGetQuery(con, Podios_Constructor_2013)
 
 
 
-```{r}
+```{r, echo=FALSE}
 ## 2014 ##
 
 Podios_Pilotos_2014 <- "SELECT d.driverId AS ID_Pilotos,
@@ -551,7 +568,7 @@ Podios_Pilotos_2014 <- dbGetQuery(con, Podios_Pilotos_2014)
 
 ```
 
-```{r}
+```{r, echo=FALSE}
 Podios_Constructor_2014 <- "SELECT c.constructorId AS ID_Constructor,
        c.name AS Nombre,
        c.nationality AS nacionalidad,
@@ -580,7 +597,7 @@ Podios_Constructor_2014 <- dbGetQuery(con, Podios_Constructor_2014)
 
 
 
-```{r}
+```{r, echo=FALSE}
 ## 2015 ## 
 
 Podios_Pilotos_2015 <- "SELECT d.driverId AS ID_Pilotos,
@@ -610,7 +627,7 @@ Podios_Pilotos_2015 <- dbGetQuery(con, Podios_Pilotos_2015)
 
 ```
 
-```{r}
+```{r, echo=FALSE}
 Podios_Constructor_2015 <- "SELECT c.constructorId AS ID_Constructor,
        c.name AS Nombre,
        c.nationality AS nacionalidad,
@@ -639,7 +656,7 @@ Podios_Constructor_2015 <- dbGetQuery(con, Podios_Constructor_2015)
 
 
 
-```{r}
+```{r, echo=FALSE}
 ## 2016 ## 
 
 Podios_Pilotos_2016 <- "SELECT d.driverId AS ID_Pilotos,
@@ -669,7 +686,7 @@ Podios_Pilotos_2016 <- dbGetQuery(con, Podios_Pilotos_2016)
 
 ```
 
-```{r}
+```{r, echo=FALSE}
 Podios_Constructor_2016 <- "SELECT c.constructorId AS ID_Constructor,
        c.name AS Nombre,
        c.nationality AS nacionalidad,
@@ -699,7 +716,7 @@ Podios_Constructor_2016 <- dbGetQuery(con, Podios_Constructor_2016)
 
 
 
-```{r}
+```{r, echo=FALSE}
 ## 2017 ##
 
 Podios_Pilotos_2017 <- "SELECT d.driverId AS ID_Pilotos,
@@ -727,9 +744,23 @@ LIMIT 3;"
 
 Podios_PILOTOS_2017 <- dbGetQuery(con, Podios_Pilotos_2017) 
 
+Podios_PILOTOS_2017 %>% 
+  gt(rowname_col = "Podios pilotos") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total"
+             ) %>%  
+  tab_header(title = "Top 3 podios de pilotos",subtitle = "Temporada 2017") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = "."
+             ) %>%
+  cols_hide(columns = c(temporada, ID_Pilotos)) %>%
+  tab_source_note(source_note = md("Tabla nro. 3."))
 ```
 
-```{r}
+```{r, echo=FALSE}
 Podios_Constructor_2017 <- "SELECT c.constructorId AS ID_Constructor,
        c.name AS Nombre,
        c.nationality AS nacionalidad,
@@ -753,6 +784,25 @@ ORDER BY Cantidad_Podios DESC
 LIMIT 3;"
 
 Podios_Constructor_2017 <- dbGetQuery(con, Podios_Constructor_2017)
+
+
+Podios_Constructor_2017 %>% 
+  gt(rowname_col = "Podios constructor") %>%
+  cols_label(Podios_1 = "Primer Podio",
+             Podios_2 = "Segundo Podio",
+             Podios_3 = "Tercer Podio",
+             Cantidad_Podios = "Total",
+             nacionalidad = "País"
+             ) %>%  
+  tab_header(title = "Top 3 podios de constructores",subtitle = "Temporada 2017") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = "."
+             ) %>%
+  cols_hide(columns = c(temporada, ID_Constructor)) %>%
+  tab_source_note(source_note = md("Tabla nro. 4."))
+
+
 ```
 
 
@@ -761,7 +811,7 @@ Podios_Constructor_2017 <- dbGetQuery(con, Podios_Constructor_2017)
 
 
 
-```{r}
+```{r, echo=FALSE}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2017 ##
 
 Retiro_Fallas_Parada_boxes_2017 <- "SELECT r.year AS Año,
@@ -779,9 +829,23 @@ GROUP BY d.driverId, r.raceId
 ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
 
 Retiro_Fallas_Parada_boxes_2017 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2017)
+
+Retiro_Fallas_Parada_boxes_2017 %>% 
+  group_by(Piloto) %>% 
+  gt(rowname_col = "Pitstop") %>%
+  cols_label(retiros_por_fallas_mecanicas = "Retiro por fallas mecanicas",
+             paradas_en_boxes = "Parada en boxes"
+             ) %>%  
+  tab_header(title = "Pitstop",subtitle = "Temporada 2017") %>%
+  fmt_number(columns = everything(),
+             decimals = 0,
+             sep_mark = "."
+             ) %>%
+  cols_hide(columns = c(Año)) %>%
+  tab_source_note(source_note = md("Tabla nro. 5."))
 ```
 
-```{r}
+```{r, echo=FALSE}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2016 ##
 
 Retiro_Fallas_Parada_boxes_2016 <- "SELECT r.year AS Año,
@@ -801,7 +865,7 @@ ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
 Retiro_Fallas_Parada_boxes_2016 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2016)
 ```
 
-```{r}
+```{r, echo=FALSE}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2015 ##
 
 Retiro_Fallas_Parada_boxes_2015 <- "SELECT r.year AS Año,
@@ -821,7 +885,7 @@ ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
 Retiro_Fallas_Parada_boxes_2015 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2015)
 ```
 
-```{r}
+```{r, echo=FALSE}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2014
 
 Retiro_Fallas_Parada_boxes_2014 <- "SELECT r.year AS Año,
@@ -841,7 +905,7 @@ ORDER BY paradas_en_boxes AND retiros_por_fallas_mecanicas DESC;"
 Retiro_Fallas_Parada_boxes_2014 <- dbGetQuery(con, Retiro_Fallas_Parada_boxes_2014)
 ```
 
-```{r}
+```{r, echo=FALSE}
 ## Número DE RETIROS POR FALLAS MECANICAS y PARADAS EN LOS BOXES EN EL AÑO 2013 ##
 
 Retiro_Fallas_Parada_boxes_2013 <- "SELECT r.year AS Año,
